@@ -1,0 +1,6 @@
+[INFO] [1779111055.809566674] [spawn_entity]: Spawn Entity started
+[INFO] [1779111055.810544512] [spawn_entity]: Loading entity XML from file /root/irb120_ws/install/irb120pe_gazebo/share/irb120pe_gazebo/urdf/cube/BlueCube.urdf
+[INFO] [1779111055.812260548] [spawn_entity]: Waiting for service /spawn_entity, timeout = 30
+[INFO] [1779111055.812750548] [spawn_entity]: Waiting for service /spawn_entity
+[INFO] [1779111056.572578778] [spawn_entity]: Calling service /spawn_entity
+[INFO] [1779111057.562645998] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [BlueCube]

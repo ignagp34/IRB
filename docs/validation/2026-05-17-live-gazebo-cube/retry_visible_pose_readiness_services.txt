@@ -1,0 +1,11 @@
+/delete_entity
+/get_planning_scene
+/irb120pe/perception/get_detected_objects
+/irb120pe/reasoning/execute_instruction
+/irb120pe_cognitive_perception/describe_parameters
+/irb120pe_cognitive_perception/get_parameter_types
+/irb120pe_cognitive_perception/get_parameters
+/irb120pe_cognitive_perception/list_parameters
+/irb120pe_cognitive_perception/set_parameters
+/irb120pe_cognitive_perception/set_parameters_atomically
+/spawn_entity

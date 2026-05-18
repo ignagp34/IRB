@@ -33,6 +33,7 @@ setup(
             "langchain_reasoning_node = irb120pe_cognitive.langchain_reasoning_node:main",
             "perception_node = irb120pe_cognitive.perception_node:main",
             "planning_scene_sync_node = irb120pe_cognitive.planning_scene_sync_node:main",
+            "gazebo_cube_helper = irb120pe_cognitive.gazebo_cube_helper:main",
         ],
     },
 )

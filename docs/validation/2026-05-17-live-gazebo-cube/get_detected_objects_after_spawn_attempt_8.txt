@@ -1,0 +1,5 @@
+requester: making request: irb120pe_cognitive_interfaces.srv.GetDetectedObjects_Request()
+
+response:
+irb120pe_cognitive_interfaces.srv.GetDetectedObjects_Response(objects=[], status='0 detected object(s) available.')
+

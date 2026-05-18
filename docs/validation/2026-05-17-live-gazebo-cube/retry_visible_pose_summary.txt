@@ -1,0 +1,12 @@
+[2026-05-18T15:27:00+02:00] launching MoveIt/Gazebo
+[2026-05-18T15:27:44+02:00] core services ready after 16 checks
+[2026-05-18T15:27:44+02:00] launching cognitive nodes
+[2026-05-18T15:27:48+02:00] cognitive services ready after 2 checks
+[2026-05-18T15:27:48+02:00] capturing readiness probes
+[2026-05-18T15:28:01+02:00] spawning BlueCube at visible pose x=0.54 y=0.63 z=0.88
+[2026-05-18T15:28:13+02:00] saving camera frame
+[2026-05-18T15:29:01+02:00] detected objects remained empty after visible-pose spawn
+[2026-05-18T15:29:07+02:00] deleting BlueCube
+[2026-05-18T15:29:29+02:00] retry visible pose validation commands complete
+[2026-05-18T15:29:29+02:00] cleanup begin
+[2026-05-18T15:29:38+02:00] cleanup complete

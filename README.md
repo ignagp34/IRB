@@ -422,6 +422,19 @@ More examples:
 - `Pick the white cube and place it in slot A`
 - `Sort all visible cubes by color`
 
+## Live Gazebo Cube Stimulus
+
+The proven live camera path uses Gazebo `/spawn_entity` with xacro-expanded cube XML, not raw `spawn_entity.py -file BlueCube.urdf`.
+
+```bash
+ros2 run irb120pe_cognitive gazebo_cube_helper spawn \
+  --cube BlueCube --name BlueCube \
+  --x 0.55 --y 0.52 --z 0.88 --qw 1.0 \
+  --replace
+```
+
+The full dry-run/mock rerun sequence is documented in [`docs/live_gazebo_cube_demo.md`](docs/live_gazebo_cube_demo.md).
+
 ## LLM Provider Configuration
 
 Copy `.env.example` and set the provider-specific variables. Never hardcode API keys.

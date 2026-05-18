@@ -1,0 +1,18 @@
+[2026-05-18T15:17:39+02:00] launching MoveIt/Gazebo
+[2026-05-18T15:17:39+02:00] waiting for Gazebo/MoveIt services
+[2026-05-18T15:18:03+02:00] core services ready after 9 checks
+[2026-05-18T15:18:03+02:00] launching cognitive nodes with slow perception
+[2026-05-18T15:18:03+02:00] waiting for cognitive services
+[2026-05-18T15:18:07+02:00] cognitive services ready after 2 checks
+[2026-05-18T15:18:07+02:00] capturing readiness probes
+[2026-05-18T15:18:20+02:00] spawning BlueCube
+[2026-05-18T15:18:32+02:00] saving camera frame after spawn
+[2026-05-18T15:18:35+02:00] capturing perception outputs
+[2026-05-18T15:19:13+02:00] detected objects remained empty after spawn
+[2026-05-18T15:19:13+02:00] capturing planning scene after spawn
+[2026-05-18T15:19:15+02:00] calling mock reasoning dry-run
+[2026-05-18T15:19:16+02:00] deleting BlueCube
+[2026-05-18T15:19:31+02:00] capturing post-delete perception and planning scene
+[2026-05-18T15:19:36+02:00] live validation commands complete
+[2026-05-18T15:19:36+02:00] cleanup begin
+[2026-05-18T15:19:46+02:00] cleanup complete

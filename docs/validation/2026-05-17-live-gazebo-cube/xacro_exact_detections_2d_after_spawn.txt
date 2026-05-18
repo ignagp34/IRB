@@ -1,0 +1,139 @@
+header:
+  stamp:
+    sec: 42
+    nanosec: 0
+  frame_id: world
+detections:
+- header:
+    stamp:
+      sec: 42
+      nanosec: 0
+    frame_id: world
+  results:
+  - hypothesis:
+      class_id: blue
+      score: 0.9122146964073181
+    pose:
+      pose:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        orientation:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+          w: 1.0
+      covariance:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+  bbox:
+    center:
+      position:
+        x: 951.4958801269531
+        y: 707.0697021484375
+      theta: 0.0
+    size_x: 25.96112060546875
+    size_y: 28.1396484375
+  id: ''
+- header:
+    stamp:
+      sec: 42
+      nanosec: 0
+    frame_id: world
+  results:
+  - hypothesis:
+      class_id: sticker
+      score: 0.8866893649101257
+    pose:
+      pose:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        orientation:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+          w: 1.0
+      covariance:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+  bbox:
+    center:
+      position:
+        x: 952.467529296875
+        y: 710.5586547851562
+      theta: 0.0
+    size_x: 39.91259765625
+    size_y: 45.4892578125
+  id: ''
+---

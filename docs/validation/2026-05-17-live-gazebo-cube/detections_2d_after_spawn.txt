@@ -1,0 +1,7 @@
+header:
+  stamp:
+    sec: 48
+    nanosec: 0
+  frame_id: world
+detections: []
+---

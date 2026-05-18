@@ -1,0 +1,6 @@
+waiting for service to become available...
+requester: making request: gazebo_msgs.srv.DeleteEntity_Request(name='BlueCube')
+
+response:
+gazebo_msgs.srv.DeleteEntity_Response(success=False, status_message='Entity [BlueCube] does not exist')
+

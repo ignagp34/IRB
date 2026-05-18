@@ -1,0 +1,5 @@
+requester: making request: gazebo_msgs.srv.DeleteEntity_Request(name='BlueCube')
+
+response:
+gazebo_msgs.srv.DeleteEntity_Response(success=True, status_message='Successfully deleted entity [BlueCube]')
+

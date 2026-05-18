@@ -1,0 +1,1 @@
+collision_object_ids=['blue_1', 'sticker_1']

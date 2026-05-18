@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/root/irb120_ws/install/irb120pe_cognitive/lib/irb120pe_cognitive/perception_node", line 33, in <module>
+    sys.exit(load_entry_point('irb120pe-cognitive', 'console_scripts', 'perception_node')())
+  File "/root/irb120_ws/build/irb120pe_cognitive/irb120pe_cognitive/perception_node.py", line 228, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

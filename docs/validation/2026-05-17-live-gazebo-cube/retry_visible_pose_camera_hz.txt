@@ -1,0 +1,9 @@
+average rate: 9.752
+	min: 0.037s max: 0.184s std dev: 0.04147s window: 11
+average rate: 9.239
+	min: 0.037s max: 0.204s std dev: 0.04781s window: 20
+average rate: 9.578
+	min: 0.037s max: 0.223s std dev: 0.04598s window: 31
+average rate: 9.590
+	min: 0.037s max: 0.223s std dev: 0.04136s window: 41
+failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241

@@ -1,0 +1,19 @@
+model /root/irb120_ws/install/irb120pe_detection/share/irb120pe_detection/yolov8/cubeDETECTION_Gz.pt
+image /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/2026-05-17-live-gazebo-cube/camera_frame_after_spawn.png exists True
+names {0: 'black', 1: 'blue', 2: 'cube', 3: 'sticker', 4: 'white'}
+imgsz=640 conf=0.35 boxes=[]
+imgsz=640 conf=0.1 boxes=[]
+imgsz=640 conf=0.05 boxes=[]
+imgsz=640 conf=0.01 boxes=[]
+imgsz=960 conf=0.35 boxes=[]
+imgsz=960 conf=0.1 boxes=[]
+imgsz=960 conf=0.05 boxes=[]
+imgsz=960 conf=0.01 boxes=[]
+imgsz=1280 conf=0.35 boxes=[]
+imgsz=1280 conf=0.1 boxes=[]
+imgsz=1280 conf=0.05 boxes=[]
+imgsz=1280 conf=0.01 boxes=[]
+imgsz=1920 conf=0.35 boxes=[]
+imgsz=1920 conf=0.1 boxes=[{'label': 'white', 'conf': 0.1582794487476349, 'xyxy': [854.82080078125, 0.59588623046875, 1348.1884765625, 661.44189453125]}]
+imgsz=1920 conf=0.05 boxes=[{'label': 'white', 'conf': 0.1582794487476349, 'xyxy': [854.82080078125, 0.59588623046875, 1348.1884765625, 661.44189453125]}, {'label': 'cube', 'conf': 0.05631552264094353, 'xyxy': [442.44134521484375, 238.7357177734375, 481.25970458984375, 272.4310302734375]}]
+imgsz=1920 conf=0.01 boxes=[{'label': 'white', 'conf': 0.1582794487476349, 'xyxy': [854.82080078125, 0.59588623046875, 1348.1884765625, 661.44189453125]}, {'label': 'cube', 'conf': 0.05631552264094353, 'xyxy': [442.44134521484375, 238.7357177734375, 481.25970458984375, 272.4310302734375]}]

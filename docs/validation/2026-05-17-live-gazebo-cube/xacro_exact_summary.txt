@@ -1,0 +1,12 @@
+[2026-05-18T15:34:45+02:00] launching MoveIt/Gazebo
+[2026-05-18T15:35:05+02:00] core services ready after 8 checks
+[2026-05-18T15:35:05+02:00] launching cognitive nodes
+[2026-05-18T15:35:09+02:00] cognitive services ready after 2 checks
+[2026-05-18T15:35:09+02:00] capturing readiness probes
+[2026-05-18T15:35:21+02:00] spawning BlueCube through xacro-expanded /spawn_entity x=0.55 y=0.52 z=0.88
+[2026-05-18T15:35:32+02:00] saving camera frame
+[2026-05-18T15:35:38+02:00] detected objects became non-empty on attempt 1
+[2026-05-18T15:35:43+02:00] deleting BlueCube
+[2026-05-18T15:36:05+02:00] xacro exact live validation commands complete
+[2026-05-18T15:36:05+02:00] cleanup begin
+[2026-05-18T15:36:14+02:00] cleanup complete
