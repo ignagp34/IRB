@@ -1,0 +1,139 @@
+﻿Starting cognitive_demo.launch.py at 2026-05-17T22:18:58+02:00
+MoveIt readiness detected: 1 after 33 seconds
+
+## ROS node list
+/interactive_marker_display_99360248133808
+/move_group
+/move_group_private_94709974583424
+/moveit_simple_controller_manager
+/rviz2
+/rviz2_private_131139350394640
+/transform_listener_impl_562362664800
+/transform_listener_impl_5a5e1c125930
+/transform_listener_impl_5a5e1c127580
+/transform_listener_impl_7745400378f0
+
+## Key services
+/irb120pe/perception/get_detected_objects
+/irb120pe_cognitive_perception/describe_parameters
+/irb120pe_cognitive_perception/get_parameter_types
+/irb120pe_cognitive_perception/get_parameters
+/irb120pe_cognitive_perception/list_parameters
+/irb120pe_cognitive_perception/set_parameters
+/irb120pe_cognitive_perception/set_parameters_atomically
+
+## Key topics
+/HMI_camera/camera_info
+/HMI_camera/image_raw
+/camera/camera_info
+/camera/image_raw
+/clock
+/dynamic_joint_states
+/joint_states
+/monitored_planning_scene
+/planning_scene
+/planning_scene_world
+
+## Controllers
+[92mjoint_state_broadcaster      [0m joint_state_broadcaster/JointStateBroadcaster          [92mactive[0m
+[92mirb120_controller            [0m joint_trajectory_controller/JointTrajectoryController  [92mactive[0m
+[92megp64_finger_left_controller [0m position_controllers/GripperActionController           [92mactive[0m
+[92megp64_finger_right_controller[0m position_controllers/GripperActionController           [92mactive[0m
+
+## Gazebo models
+Invalid arguments
+
+## One joint_states sample
+header:
+  stamp:
+    sec: 35
+    nanosec: 13000000
+  frame_id: base_link
+name:
+- joint_1
+- joint_2
+- joint_5
+- joint_3
+- joint_6
+- joint_4
+- egp64_finger_left_joint
+- egp64_finger_right_joint
+- BASE_TF_joint
+- TCP_joint
+- EE_egp64_joint
+position:
+- 1.8381183988225303e-06
+- -0.0006005419306731596
+- 1.5708397179213396
+- 0.02964747480212626
+- -4.289102743193496e-06
+- 7.493950313630648e-07
+- -1.30130723350503e-07
+- 6.853125218276503e-07
+- -1.389458438333985e-09
+- 2.249312752770023e-08
+- 2.5025844144119683e-08
+velocity:
+- 8.011287987321931e-08
+- -0.0005387503210798667
+- 3.912117671087817e-05
+- 0.027633102673082874
+- -4.186097975766778e-06
+- 6.459152888138689e-07
+- -1.0609075434272968e-07
+- 1.119330398952912e-07
+- 2.1351599675899767e-14
+- 0.00016296974873590363
+- 0.005318329726794886
+effort:
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+---
+
+## Perception service
+waiting for service to become available...
+requester: making request: irb120pe_cognitive_interfaces.srv.GetDetectedObjects_Request()
+
+response:
+irb120pe_cognitive_interfaces.srv.GetDetectedObjects_Response(objects=[], status='0 detected object(s) available.')
+
+
+## Reasoning service dry-run/mock no-stimulus check
+waiting for service to become available...
+requester: making request: irb120pe_cognitive_interfaces.srv.ExecuteInstruction_Request(instruction='Pick the blue cube and place it in the left container')
+
+response:
+irb120pe_cognitive_interfaces.srv.ExecuteInstruction_Response(success=False, status='No detected object matches the requested source.', tool_trace='[]')
+
+
+## Planning scene world object count
+collision_objects=0 ids=[]
+bash: line 94: /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe: cannot execute binary file: Exec format error
+
+## Readiness log excerpts
+[spawn_entity.py-3] [INFO] [1779049145.987305548] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [irb120]
+[gzserver-1] [INFO] [1779049147.088309487] [gazebo_ros2_control]: Loading controller_manager
+[gzserver-1] [INFO] [1779049147.248708964] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-6] [INFO] [1779049147.378560091] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[gzserver-1] [INFO] [1779049148.078605939] [controller_manager]: Loading controller 'irb120_controller'
+[spawner-7] [INFO] [1779049148.283620387] [spawner_irb120_controller]: [92mConfigured and activated [1mirb120_controller[0m
+[gzserver-1] [INFO] [1779049149.023551465] [controller_manager]: Loading controller 'egp64_finger_left_controller'
+[spawner-8] [INFO] [1779049149.183275281] [spawner_egp64_finger_left_controller]: [92mConfigured and activated [1megp64_finger_left_controller[0m
+[gzserver-1] [INFO] [1779049160.334475894] [controller_manager]: Loading controller 'egp64_finger_right_controller'
+[spawner-9] [INFO] [1779049160.542207741] [spawner_egp64_finger_right_controller]: [92mConfigured and activated [1megp64_finger_right_controller[0m
+[move_group-15] *     - ApplyPlanningSceneService
+[move_group-15] *     - GetPlanningSceneService
+[move_group-15] [96mLoading 'move_group/ApplyPlanningSceneService'...
+[move_group-15] [0m[96mLoading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-15] You can start planning now!
+
+Stopping launch pid 451 at 2026-05-17T22:20:10+02:00

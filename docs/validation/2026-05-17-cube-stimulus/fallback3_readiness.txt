@@ -1,0 +1,3 @@
+/apply_planning_scene ready
+/get_planning_scene ready
+controller manager ready

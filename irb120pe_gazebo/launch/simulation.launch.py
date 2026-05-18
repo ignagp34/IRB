@@ -36,12 +36,14 @@
 
 # Import libraries:
 import os
+from xml.dom import Node as DomNode
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 import xacro
 import yaml
 
@@ -65,6 +67,13 @@ def load_yaml(package_name, file_path):
     except EnvironmentError:
         # parent of IOError, OSError *and* WindowsError where available.
         return None
+
+def strip_xml_comments(node):
+    for child in list(node.childNodes):
+        if child.nodeType == DomNode.COMMENT_NODE:
+            node.removeChild(child)
+        else:
+            strip_xml_comments(child)
 
 # ========== **GENERATE LAUNCH DESCRIPTION** ========== #
 def generate_launch_description():
@@ -105,7 +114,8 @@ def generate_launch_description():
     # Generate ROBOT_DESCRIPTION for ABB-IRB120:
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc, mappings={})
-    robot_description_config = doc.toxml()
+    strip_xml_comments(doc)
+    robot_description_config = doc.documentElement.toxml()
     robot_description = {'robot_description': robot_description_config}
 
     # ROBOT STATE PUBLISHER NODE:
@@ -120,9 +130,11 @@ def generate_launch_description():
     )
 
     # SPAWN ROBOT TO GAZEBO:
+    spawn_timeout = LaunchConfiguration("spawn_timeout")
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'irb120'],
+                                   '-entity', 'irb120',
+                                   '-timeout', spawn_timeout],
                         output='both')
 
     # ***** CONTROLLERS ***** #
@@ -154,7 +166,11 @@ def generate_launch_description():
 
     # ***** RETURN LAUNCH DESCRIPTION ***** #
     return LaunchDescription([
-        
+        DeclareLaunchArgument(
+            "spawn_timeout",
+            default_value="120.0",
+            description="Seconds to wait for Gazebo spawn services.",
+        ),
         gazebo, 
         node_robot_state_publisher,
         spawn_entity,

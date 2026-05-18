@@ -1,0 +1,4 @@
+Waiting for MoveIt/Gazebo services...
+/apply_planning_scene ready
+/get_planning_scene ready
+controller manager ready

@@ -1,0 +1,6 @@
+string object_id
+geometry_msgs/PoseStamped source_pose
+string target_slot
+---
+bool success
+string status

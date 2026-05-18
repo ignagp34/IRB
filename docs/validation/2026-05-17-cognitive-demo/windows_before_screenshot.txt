@@ -1,0 +1,17 @@
+﻿
+ProcessName          MainWindowTitle                                                           
+-----------          ---------------                                                           
+Antigravity          DLS-BPMN - Antigravity - index.html (Working Tree) (index.html)           
+ApplicationFrameHost HP Audio Center                                                           
+chrome               Seguridad en proyectos NPM - Google Chrome                                
+Codex                Codex                                                                     
+Docker Desktop       Troubleshoot - Docker Desktop                                             
+HPAudioCenter        HP Audio Center                                                           
+msedge               pipeline.svg y 1 página más - Personal: Microsoft​ Edge                   
+msrdc                Gazebo (Ubuntu-22.04)                                                     
+Obsidian             Pipeline de gitlab - Acciones de github - Obsidian Vault - Obsidian 1.12.7
+SystemSettings       Configuración                                                             
+TextInputHost        Experiencia de entrada de Windows                                         
+WindowsTerminal      Windows PowerShell                                                        
+
+

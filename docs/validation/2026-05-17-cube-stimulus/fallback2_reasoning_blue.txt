@@ -1,0 +1,5 @@
+requester: making request: irb120pe_cognitive_interfaces.srv.ExecuteInstruction_Request(instruction='Pick the blue cube and place it in the right container')
+
+response:
+irb120pe_cognitive_interfaces.srv.ExecuteInstruction_Response(success=False, status='Timed out while reading detected objects.', tool_trace='[]')
+

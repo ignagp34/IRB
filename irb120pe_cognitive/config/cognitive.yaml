@@ -1,0 +1,49 @@
+/**:
+  ros__parameters:
+    use_sim_time: true
+
+    planning_frame: world
+    camera_frame: camera
+    camera_topic: /camera/image_raw
+    camera_info_topic: /camera/camera_info
+    detections_2d_topic: /irb120pe/perception/detections_2d
+    detected_objects_service: /irb120pe/perception/get_detected_objects
+    move_arm_service: /irb120pe/action/move_arm
+    pick_and_place_service: /irb120pe/action/pick_and_place
+    execute_instruction_service: /irb120pe/reasoning/execute_instruction
+
+    yolo_model_path: ""
+    yolo_confidence: 0.35
+    detection_period_sec: 0.5
+    object_stale_after_sec: 3.0
+    cube_size_m: 0.035
+    table_height_m: 0.88
+
+    dry_run: false
+    llm_provider: mock
+    llm_model: gpt-4o-mini
+    ollama_base_url: http://localhost:11434
+    huggingface_endpoint_url: ""
+
+    workspace_limits:
+      x: [0.05, 0.75]
+      y: [0.05, 0.85]
+      z: [0.95, 1.65]
+
+    slots:
+      slot_a:
+        label: white_slot
+        aliases: [slot_a, white_slot, left_container]
+        pose: [0.105, 0.100, 1.08, 0.707, 0.707, 0.0, 0.0]
+      slot_b:
+        label: black_slot
+        aliases: [slot_b, black_slot]
+        pose: [0.105, 0.145, 1.08, 0.707, 0.707, 0.0, 0.0]
+      slot_c:
+        label: blue_slot
+        aliases: [slot_c, blue_slot, right_container]
+        pose: [0.150, 0.145, 1.08, 0.707, 0.707, 0.0, 0.0]
+      unknown_slot:
+        label: unknown_slot
+        aliases: [unknown_slot, no_detection_slot]
+        pose: [0.150, 0.100, 1.08, 0.707, 0.707, 0.0, 0.0]

@@ -1,0 +1,2 @@
+WARNING: topic [/irb120pe/perception/detections_2d] does not appear to be published yet
+Could not determine the type for the passed topic

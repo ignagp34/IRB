@@ -31,6 +31,12 @@ install(
   DESTINATION 
     share/${PROJECT_NAME}
 )
+install(
+  DIRECTORY
+    yolov8
+  DESTINATION
+    share/${PROJECT_NAME}
+)
 install(PROGRAMS
   
   python/main.py

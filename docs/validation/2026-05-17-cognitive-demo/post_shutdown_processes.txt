@@ -1,0 +1,1 @@
+﻿443 bash -lc pgrep -af 'ros2 launch|gzserver|gzclient|gazebo' || true

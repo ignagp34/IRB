@@ -36,6 +36,7 @@
 
 # Import libraries:
 import os
+from xml.dom import Node as DomNode
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -67,6 +68,13 @@ def load_yaml(package_name, file_path):
     except EnvironmentError:
         # parent of IOError, OSError *and* WindowsError where available.
         return None
+
+def strip_xml_comments(node):
+    for child in list(node.childNodes):
+        if child.nodeType == DomNode.COMMENT_NODE:
+            node.removeChild(child)
+        else:
+            strip_xml_comments(child)
 
 # ========== **GENERATE LAUNCH DESCRIPTION** ========== #
 def generate_launch_description():
@@ -108,13 +116,16 @@ def generate_launch_description():
     # Generate ROBOT_DESCRIPTION for ABB-IRB120:
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc, mappings={})
-    robot_description_config = doc.toxml()
+    strip_xml_comments(doc)
+    robot_description_config = doc.documentElement.toxml()
     robot_description = {'robot_description': robot_description_config}
 
     # SPAWN ROBOT TO GAZEBO:
+    spawn_timeout = LaunchConfiguration("spawn_timeout")
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'irb120'],
+                                   '-entity', 'irb120',
+                                   '-timeout', spawn_timeout],
                         output='screen')
 
     # ***** STATIC TRANSFORM ***** #
@@ -171,6 +182,14 @@ def generate_launch_description():
     # Command-line argument: RVIZ file?
     rviz_arg = DeclareLaunchArgument(
         "rviz_file", default_value="False", description="Load RVIZ file."
+    )
+    spawn_timeout_arg = DeclareLaunchArgument(
+        "spawn_timeout", default_value="120.0", description="Seconds to wait for Gazebo spawn services."
+    )
+    start_legacy_interfaces_arg = DeclareLaunchArgument(
+        "start_legacy_interfaces",
+        default_value="true",
+        description="Start ros2srrc_execution /Move and /Robmove interfaces.",
     )
 
     # *** PLANNING CONTEXT *** #
@@ -298,6 +317,7 @@ def generate_launch_description():
         executable="move",
         output="screen",
         parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"use_sim_time": True}, {"ROB_PARAM": "irb120"}, {"EE_PARAM": "egp64"}, {"ENV_PARAM": "gazebo"}],
+        condition=IfCondition(LaunchConfiguration("start_legacy_interfaces")),
     )
     RobMoveInterface = Node(
         name="robmove",
@@ -305,6 +325,7 @@ def generate_launch_description():
         executable="robmove",
         output="screen",
         parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"use_sim_time": True}, {"ROB_PARAM": "irb120"}, {"EE_PARAM": "egp64"}, {"ENV_PARAM": "gazebo"}],
+        condition=IfCondition(LaunchConfiguration("start_legacy_interfaces")),
     )
     RobPoseInterface = Node(
         name="robpose",
@@ -312,6 +333,7 @@ def generate_launch_description():
         executable="robpose",
         output="screen",
         parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"use_sim_time": True}, {"ROB_PARAM": "irb120"}],
+        condition=IfCondition(LaunchConfiguration("start_legacy_interfaces")),
     )
     SequenceInterface = Node(
         name="sequence",
@@ -319,11 +341,14 @@ def generate_launch_description():
         executable="sequence",
         output="screen",
         parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"use_sim_time": True}, {"ROB_PARAM": "irb120"}, {"EE_PARAM": "egp64"}, {"ENV_PARAM": "gazebo"}],
+        condition=IfCondition(LaunchConfiguration("start_legacy_interfaces")),
     )
     
     return LaunchDescription(
         [
             # Gazebo nodes:
+            spawn_timeout_arg,
+            start_legacy_interfaces_arg,
             gazebo, 
             spawn_entity,
             # ROS2_CONTROL:

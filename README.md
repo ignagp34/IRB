@@ -321,3 +321,139 @@ Don't forget to give the project a star! Thanks you very much!
 * [OpenCV - Computer Vision Library](https://opencv.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+---
+
+# Cognitive Industrial Sorting Cobot Extension
+
+This repository now includes a cognitive ROS 2 extension for the project **Cognitive Industrial Sorting Cobot - ABB IRB-120 Vision-Action Loop**. The original deterministic IFRA-Cranfield demos are preserved, and the new packages add a separated perception, planning-scene, action-adapter, and LangChain reasoning loop.
+
+## Architecture
+
+```text
+Natural language instruction
+-> /irb120pe/reasoning/execute_instruction
+-> LangChain/mock reasoning tools
+-> /irb120pe/perception/get_detected_objects
+-> slot and workspace validation
+-> /irb120pe/action/pick_and_place or /irb120pe/action/move_arm
+-> /Robmove, /Move, LinkAttacher, MoveIt 2, Gazebo
+-> final status and tool trace
+```
+
+The LLM is constrained to strict tools. It cannot execute arbitrary code and cannot directly command robot topics.
+
+## Added Packages
+
+- `irb120pe_cognitive_interfaces`: ROS 2 messages and services for detected objects, natural-language instructions, arm motion, and pick-and-place.
+- `irb120pe_cognitive`: Python ROS 2 nodes for perception publishing, Planning Scene synchronization, validated robot action tools, and LangChain reasoning.
+
+Legacy deterministic scripts remain available:
+
+```bash
+ros2 run irb120pe_detection main.py
+ros2 run irb120pe_detection main_Gz.py
+ros2 run irb120pe_detection main_GzSimplified.py
+```
+
+## Recommended Environment
+
+Use **Ubuntu 22.04 on WSL 2** for ROS 2 Humble, MoveIt 2, and Gazebo Classic. Keep the ROS workspace inside the WSL Linux filesystem:
+
+```bash
+mkdir -p ~/irb120_ws/src
+cd ~/irb120_ws/src
+git clone --branch humble https://github.com/IFRA-Cranfield/irb120_PoseEstimation.git
+cd ~/irb120_ws
+```
+
+Detailed WSL setup is in [`docs/setup_wsl_ubuntu22.md`](docs/setup_wsl_ubuntu22.md).
+
+## Dependencies
+
+Install ROS 2 Humble desktop, MoveIt 2, Gazebo ROS packages, `colcon`, `rosdep`, `vcstool`, OpenCV/cv_bridge, `vision_msgs`, `tf2_ros`, and the existing IFRA dependencies used by this project (`ros2srrc_*`, `objectpose_msgs`, `linkpose_msgs`, `linkattacher_msgs`, ABB support packages).
+
+Python LLM dependencies depend on provider:
+
+```bash
+pip install langchain langchain-openai langchain-ollama langchain-huggingface ultralytics
+```
+
+The default reasoning provider is `mock`, so the cognitive stack can be demonstrated without API keys.
+
+## Build
+
+```bash
+cd ~/irb120_ws
+source /opt/ros/humble/setup.bash
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
+```
+
+## Launch
+
+```bash
+# Base Gazebo + MoveIt
+ros2 launch irb120pe_moveit2 moveit2.launch.py
+
+# Perception only
+ros2 launch irb120pe_cognitive cognitive_perception.launch.py
+
+# Planning Scene sync only
+ros2 launch irb120pe_cognitive planning_scene.launch.py
+
+# Reasoning and action adapter
+ros2 launch irb120pe_cognitive reasoning.launch.py
+
+# Full cognitive demo
+ros2 launch irb120pe_cognitive cognitive_demo.launch.py
+```
+
+## Run A Natural-Language Command
+
+```bash
+ros2 service call /irb120pe/reasoning/execute_instruction irb120pe_cognitive_interfaces/srv/ExecuteInstruction "{instruction: 'Pick the blue cube and place it in the left container'}"
+```
+
+More examples:
+
+- `Classify the black cube into slot B`
+- `Pick the white cube and place it in slot A`
+- `Sort all visible cubes by color`
+
+## LLM Provider Configuration
+
+Copy `.env.example` and set the provider-specific variables. Never hardcode API keys.
+
+```bash
+# OpenAI
+export OPENAI_API_KEY=...
+ros2 launch irb120pe_cognitive reasoning.launch.py llm_provider:=openai
+
+# Ollama
+ros2 launch irb120pe_cognitive reasoning.launch.py llm_provider:=ollama llm_model:=llama3.1
+```
+
+## Safety
+
+Movement tools validate numeric coordinates, configured workspace bounds, valid slots, and available detected objects. Unsafe, incomplete, ambiguous, or unsupported commands are rejected with explicit errors. Red cube commands are unsupported until the simulation assets and YOLO model include a red class.
+
+## Tests
+
+```bash
+cd ~/irb120_ws
+colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
+colcon test-result --verbose
+```
+
+The lightweight tests cover workspace bounds, slot validation, object selection, and structured tool payloads.
+
+## Troubleshooting
+
+- If `Ubuntu-22.04` is missing, install it with `wsl --install -d Ubuntu-22.04`.
+- If Gazebo GUI fails in WSL, confirm WSLg is enabled and test with a simple GUI app.
+- If YOLO does not load, check `yolo_model_path` in `irb120pe_cognitive/config/cognitive.yaml`.
+- If the reasoning node reports no detections, launch perception first and call `/irb120pe/perception/get_detected_objects`.
+- If movement is rejected, inspect workspace limits and slot coordinates in `config/cognitive.yaml`.
+- If a real LLM provider fails, switch back to `llm_provider:=mock` to validate the ROS tool path.

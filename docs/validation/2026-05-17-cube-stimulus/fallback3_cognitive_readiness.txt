@@ -1,0 +1,3 @@
+perception service ready
+pick_and_place service ready
+reasoning service ready
