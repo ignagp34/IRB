@@ -723,3 +723,86 @@ Next safe motion options:
 - Or add a MoveIt-native simulation-only probe that plans and executes a tiny reversible joint move through MoveIt/controller actions, with before/after `/joint_states` capture. This should remain Gazebo-only, with LinkAttacher and pick/place disabled.
 
 Shutdown note: after evidence capture, the bounded launch was interrupted. `move_group` printed the normal readiness message before validation; during forced shutdown it emitted a class-loader warning and a segmentation fault after the evidence was already captured. WSL was reset afterward to clear Gazebo/ROS processes.
+
+## 2026-05-19 MoveIt-Native Simulation Motion Probe
+
+Validation remained simulation-only. No real ABB IRB-120 was connected or commanded. No `/Robmove`, `/Move`, LinkAttacher, gripper command, pick/place command, or cognitive action-adapter non-dry-run path was used.
+
+Evidence artifacts were saved under:
+
+```text
+docs/validation/2026-05-19-moveit-motion-probe/
+```
+
+Build and test commands:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-skip ros2srrc_execution
+source install/setup.bash
+colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
+colcon test-result --verbose
+```
+
+Result: build passed with `31 packages finished`, continuing to skip `ros2srrc_execution`. Cognitive tests passed: `25 tests, 0 errors, 0 failures, 0 skipped`.
+
+The simulation-only stack was launched with legacy interfaces disabled:
+
+```bash
+ros2 launch irb120pe_moveit2 moveit2.launch.py \
+  spawn_timeout:=120.0 start_legacy_interfaces:=false rviz_file:=True
+```
+
+Readiness was rerun before motion:
+
+```bash
+ros2 run irb120pe_cognitive motion_readiness_validator \
+  --output-dir /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/2026-05-19-moveit-motion-probe/readiness
+```
+
+Readiness summary:
+
+```text
+Motion readiness validation: BLOCKED
+[PASS] controllers active - active=['joint_state_broadcaster', 'irb120_controller', 'egp64_finger_left_controller', 'egp64_finger_right_controller']
+[PASS] /joint_states publishes - 11 joints sampled
+[PASS] MoveIt/controller action servers ready - move_action, execute_trajectory, follow_joint_trajectory available
+[BLOCKED] existing action adapter execution path - missing=['/Robmove', '/Move']; ros2srrc_execution is required for /Robmove and /Move
+[PASS] MoveIt planning scene service ready - collision_object_count=0
+```
+
+The new MoveIt-native probe was then run with explicit execution enabled:
+
+```bash
+ros2 run irb120pe_cognitive moveit_motion_probe \
+  --execute --return-to-start \
+  --output-dir /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/2026-05-19-moveit-motion-probe/probe
+```
+
+Probe summary:
+
+```text
+MoveIt motion probe: PASS
+[PASS] controllers active - active=['joint_state_broadcaster', 'irb120_controller', 'egp64_finger_left_controller', 'egp64_finger_right_controller']
+[PASS] MoveIt/controller action servers ready - move_action, execute_trajectory, follow_joint_trajectory available
+[PASS] legacy action servers unused - /Robmove and /Move unavailable and unused
+[PASS] /joint_states baseline captured - 6 arm joints
+[PASS] tiny reversible target selected - joint_6 delta=0.020000 rad
+[PASS] MoveGroup outbound goal - executed
+[PASS] outbound joint delta observed - joint_6 delta=0.019997 rad
+[PASS] MoveGroup return goal - returned toward original joint state
+[PASS] final state near baseline - max_abs_delta=0.000028 rad
+```
+
+Delta evidence from `probe/delta_report.json`:
+
+```text
+target_delta=0.020000 rad
+moved_joint_after_delta=0.01999663162515919 rad
+max_abs_final_delta=0.00002768264625974126 rad
+```
+
+Result: the Gazebo/MoveIt simulation-only path can execute and reverse a tiny joint-space motion through `/move_action` while the legacy `/Robmove` and `/Move` action servers remain unavailable. This validates only MoveIt-native simulation motion in WSL/Gazebo; it does not validate real robot execution, LinkAttacher, gripper motion, pick/place, or the cognitive action adapter's non-dry-run path.
+
+Cleanup result: `post_shutdown_processes.txt` was empty after shutdown, so no `ros2 launch`, `gzserver`, `gzclient`, or `gazebo` processes remained from this validation.

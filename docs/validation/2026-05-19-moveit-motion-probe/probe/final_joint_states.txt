@@ -1,0 +1,8 @@
+final_joint_states=[
+  joint_1: position=0.000001825
+  joint_2: position=-0.000665492
+  joint_3: position=0.032993836
+  joint_4: position=0.000000826
+  joint_5: position=1.570844433
+  joint_6: position=-0.000001432
+]

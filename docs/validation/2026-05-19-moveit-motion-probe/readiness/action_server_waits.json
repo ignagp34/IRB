@@ -1,0 +1,7 @@
+{
+  "/Move": false,
+  "/Robmove": false,
+  "/execute_trajectory": true,
+  "/irb120_controller/follow_joint_trajectory": true,
+  "/move_action": true
+}

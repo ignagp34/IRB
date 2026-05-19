@@ -1,0 +1,4 @@
+joint_state_broadcaster active
+irb120_controller active
+egp64_finger_left_controller active
+egp64_finger_right_controller active

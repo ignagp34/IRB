@@ -1,0 +1,8 @@
+pre_joint_states=[
+  joint_1: position=0.000001825
+  joint_2: position=-0.000664957
+  joint_3: position=0.032966153
+  joint_4: position=0.000000825
+  joint_5: position=1.570844394
+  joint_6: position=-0.000004792
+]

@@ -1,0 +1,6 @@
+Motion readiness validation: BLOCKED
+[PASS] controllers active - active=['joint_state_broadcaster', 'irb120_controller', 'egp64_finger_left_controller', 'egp64_finger_right_controller']
+[PASS] /joint_states publishes - 11 joints sampled
+[PASS] MoveIt/controller action servers ready - move_action, execute_trajectory, follow_joint_trajectory available
+[BLOCKED] existing action adapter execution path - missing=['/Robmove', '/Move']; ros2srrc_execution is required for /Robmove and /Move
+[PASS] MoveIt planning scene service ready - collision_object_count=0

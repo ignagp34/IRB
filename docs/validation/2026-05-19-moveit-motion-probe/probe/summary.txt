@@ -1,0 +1,10 @@
+MoveIt motion probe: PASS
+[PASS] controllers active - active=['joint_state_broadcaster', 'irb120_controller', 'egp64_finger_left_controller', 'egp64_finger_right_controller']
+[PASS] MoveIt/controller action servers ready - move_action, execute_trajectory, follow_joint_trajectory available
+[PASS] legacy action servers unused - /Robmove and /Move unavailable and unused
+[PASS] /joint_states baseline captured - 6 arm joints
+[PASS] tiny reversible target selected - joint_6 delta=0.020000 rad
+[PASS] MoveGroup outbound goal - executed
+[PASS] outbound joint delta observed - joint_6 delta=0.019997 rad
+[PASS] MoveGroup return goal - returned toward original joint state
+[PASS] final state near baseline - max_abs_delta=0.000028 rad

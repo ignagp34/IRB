@@ -1,0 +1,9 @@
+action_graph_names_and_types= (server readiness is recorded in action_server_waits.json)
+/Move: ros2srrc_data/action/Move
+/Robmove: ros2srrc_data/action/Robmove
+/egp64_finger_left_controller/gripper_cmd: control_msgs/action/GripperCommand
+/egp64_finger_right_controller/gripper_cmd: control_msgs/action/GripperCommand
+/execute_trajectory: moveit_msgs/action/ExecuteTrajectory
+/irb120_controller/follow_joint_trajectory: control_msgs/action/FollowJointTrajectory
+/move_action: moveit_msgs/action/MoveGroup
+/sequence_move_group: moveit_msgs/action/MoveGroupSequence

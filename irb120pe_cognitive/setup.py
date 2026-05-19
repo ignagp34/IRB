@@ -36,6 +36,7 @@ setup(
             "gazebo_cube_helper = irb120pe_cognitive.gazebo_cube_helper:main",
             "live_cube_validator = irb120pe_cognitive.live_cube_validator:main",
             "motion_readiness_validator = irb120pe_cognitive.motion_readiness_validator:main",
+            "moveit_motion_probe = irb120pe_cognitive.moveit_motion_probe:main",
         ],
     },
 )
