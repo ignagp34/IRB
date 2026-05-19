@@ -1,0 +1,4 @@
+[92mjoint_state_broadcaster      [0m joint_state_broadcaster/JointStateBroadcaster          [92mactive[0m
+[92mirb120_controller            [0m joint_trajectory_controller/JointTrajectoryController  [92mactive[0m
+[92megp64_finger_left_controller [0m position_controllers/GripperActionController           [92mactive[0m
+[92megp64_finger_right_controller[0m position_controllers/GripperActionController           [92mactive[0m

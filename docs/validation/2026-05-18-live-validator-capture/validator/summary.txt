@@ -1,0 +1,9 @@
+Live cube validation: PASS
+[PASS] predelete existing cube - Entity [BlueCube] does not exist
+[PASS] spawn cube - SpawnEntity: Successfully spawned entity [BlueCube]
+[PASS] wait for detections - matched ['blue_1']
+[PASS] verify Planning Scene add - ids=['blue_1', 'sticker_1']
+[PASS] mock reasoning dry-run - dry_run: would pick blue_1 and place into slot_c.
+[PASS] delete cube - Successfully deleted entity [BlueCube]
+[PASS] verify perception stale removal - remaining=[]
+[PASS] verify Planning Scene stale removal - ids=[]

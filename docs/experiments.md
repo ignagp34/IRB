@@ -646,3 +646,80 @@ Gazebo /camera/image_raw
 -> mock reasoning
 -> dry-run pick/place validation
 ```
+
+## 2026-05-18 Simulation Motion Readiness
+
+Validation remained simulation-only. No real robot was connected or commanded. No `/Robmove`, `/Move`, LinkAttacher, pick/place, or trajectory goal was sent.
+
+Evidence artifacts were saved under:
+
+```text
+docs/validation/2026-05-18-motion-readiness/
+```
+
+Build and test commands:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-skip ros2srrc_execution
+source install/setup.bash
+colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
+colcon test-result --verbose
+```
+
+Result: build passed with `31 packages finished`, continuing to skip `ros2srrc_execution`. Cognitive tests passed: `18 tests, 0 errors, 0 failures, 0 skipped`.
+
+The non-moving motion readiness stack was launched with legacy interfaces disabled:
+
+```bash
+ros2 launch irb120pe_moveit2 moveit2.launch.py \
+  spawn_timeout:=120.0 start_legacy_interfaces:=false rviz_file:=True
+```
+
+The new validator was run against the live Gazebo/MoveIt simulation:
+
+```bash
+ros2 run irb120pe_cognitive motion_readiness_validator \
+  --output-dir /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/2026-05-18-motion-readiness/validator
+```
+
+Validator summary:
+
+```text
+Motion readiness validation: BLOCKED
+[PASS] controllers active - active=['joint_state_broadcaster', 'irb120_controller', 'egp64_finger_left_controller', 'egp64_finger_right_controller']
+[PASS] /joint_states publishes - 11 joints sampled
+[PASS] MoveIt/controller action servers ready - move_action, execute_trajectory, follow_joint_trajectory available
+[BLOCKED] existing action adapter execution path - missing=['/Robmove', '/Move']; ros2srrc_execution is required for /Robmove and /Move
+[PASS] MoveIt planning scene service ready - collision_object_count=0
+```
+
+Controller readiness:
+
+```text
+joint_state_broadcaster       active
+irb120_controller             active
+egp64_finger_left_controller  active
+egp64_finger_right_controller active
+```
+
+Available typed action servers from `ros2 action list -t`:
+
+```text
+/egp64_finger_left_controller/gripper_cmd [control_msgs/action/GripperCommand]
+/egp64_finger_right_controller/gripper_cmd [control_msgs/action/GripperCommand]
+/execute_trajectory [moveit_msgs/action/ExecuteTrajectory]
+/irb120_controller/follow_joint_trajectory [control_msgs/action/FollowJointTrajectory]
+/move_action [moveit_msgs/action/MoveGroup]
+/sequence_move_group [moveit_msgs/action/MoveGroupSequence]
+```
+
+Result: the simulation stack is ready for a MoveIt-native simulation-only motion probe, because controllers, `/joint_states`, `/move_action`, `/execute_trajectory`, and `/irb120_controller/follow_joint_trajectory` are available. The existing cognitive action adapter's non-dry-run path remains blocked in this launch because `/Robmove` and `/Move` are unavailable while `ros2srrc_execution` is skipped.
+
+Next safe motion options:
+
+- Provide/build the missing `ros2srrc_execution` dependency chain, including `abb_robot_msgs`, then rerun readiness with `/Robmove` and `/Move` expected.
+- Or add a MoveIt-native simulation-only probe that plans and executes a tiny reversible joint move through MoveIt/controller actions, with before/after `/joint_states` capture. This should remain Gazebo-only, with LinkAttacher and pick/place disabled.
+
+Shutdown note: after evidence capture, the bounded launch was interrupted. `move_group` printed the normal readiness message before validation; during forced shutdown it emitted a class-loader warning and a segmentation fault after the evidence was already captured. WSL was reset afterward to clear Gazebo/ROS processes.

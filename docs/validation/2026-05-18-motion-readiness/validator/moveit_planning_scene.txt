@@ -1,0 +1,1 @@
+collision_object_count=0

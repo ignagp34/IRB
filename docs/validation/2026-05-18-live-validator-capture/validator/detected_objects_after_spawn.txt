@@ -1,0 +1,4 @@
+objects=[
+  blue_1 label=blue confidence=0.913773 x=0.549297, y=0.603872, z=0.900000
+  sticker_1 label=sticker confidence=0.890927 x=0.549365, y=0.605529, z=0.900000
+]

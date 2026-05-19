@@ -1,0 +1,13 @@
+joint_states=[
+  joint_1: position=0.000001754, velocity=0.000000041
+  joint_2: position=-0.001000380, velocity=-0.000513167
+  joint_5: position=1.570868707, velocity=0.000037148
+  joint_3: position=0.050754812, velocity=0.027909964
+  joint_6: position=-0.000007586, velocity=-0.000004520
+  joint_4: position=0.000001214, velocity=0.000000588
+  egp64_finger_left_joint: position=-0.000000183, velocity=-0.000000106
+  egp64_finger_right_joint: position=0.000000297, velocity=0.000000113
+  BASE_TF_joint: position=-0.000000001, velocity=0.000000000
+  TCP_joint: position=0.000000021, velocity=0.000164775
+  EE_egp64_joint: position=0.000000023, velocity=0.005377224
+]

@@ -34,6 +34,8 @@ setup(
             "perception_node = irb120pe_cognitive.perception_node:main",
             "planning_scene_sync_node = irb120pe_cognitive.planning_scene_sync_node:main",
             "gazebo_cube_helper = irb120pe_cognitive.gazebo_cube_helper:main",
+            "live_cube_validator = irb120pe_cognitive.live_cube_validator:main",
+            "motion_readiness_validator = irb120pe_cognitive.motion_readiness_validator:main",
         ],
     },
 )
