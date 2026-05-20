@@ -17,13 +17,16 @@ def generate_launch_description():
             DeclareLaunchArgument("llm_provider", default_value="mock"),
             DeclareLaunchArgument("llm_model", default_value="gpt-4o-mini"),
             DeclareLaunchArgument("dry_run", default_value="true"),
+            DeclareLaunchArgument("execution_backend", default_value="moveit_sim"),
             DeclareLaunchArgument("spawn_timeout", default_value="120.0"),
             DeclareLaunchArgument("start_legacy_interfaces", default_value="false"),
+            DeclareLaunchArgument("rviz_file", default_value="True"),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(moveit_launch),
                 launch_arguments={
                     "spawn_timeout": LaunchConfiguration("spawn_timeout"),
                     "start_legacy_interfaces": LaunchConfiguration("start_legacy_interfaces"),
+                    "rviz_file": LaunchConfiguration("rviz_file"),
                 }.items(),
             ),
             TimerAction(
@@ -48,7 +51,13 @@ def generate_launch_description():
                         executable="action_adapter_node",
                         name="irb120pe_action_adapter",
                         output="screen",
-                        parameters=[config, {"dry_run": LaunchConfiguration("dry_run")}],
+                        parameters=[
+                            config,
+                            {
+                                "dry_run": LaunchConfiguration("dry_run"),
+                                "execution_backend": LaunchConfiguration("execution_backend"),
+                            },
+                        ],
                     ),
                     Node(
                         package="irb120pe_cognitive",

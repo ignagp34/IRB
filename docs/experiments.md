@@ -806,3 +806,68 @@ max_abs_final_delta=0.00002768264625974126 rad
 Result: the Gazebo/MoveIt simulation-only path can execute and reverse a tiny joint-space motion through `/move_action` while the legacy `/Robmove` and `/Move` action servers remain unavailable. This validates only MoveIt-native simulation motion in WSL/Gazebo; it does not validate real robot execution, LinkAttacher, gripper motion, pick/place, or the cognitive action adapter's non-dry-run path.
 
 Cleanup result: `post_shutdown_processes.txt` was empty after shutdown, so no `ros2 launch`, `gzserver`, `gzclient`, or `gazebo` processes remained from this validation.
+
+Repeatable operator notes were split into `docs/moveit_simulation_motion_probe.md` so future reruns do not need to rely on this experiment log alone.
+
+## 2026-05-19 Gazebo-Only Cognitive Pick/Place
+
+Validation remained Gazebo-only. The run used MoveIt `/move_action`, simulated gripper `gripper_cmd` actions, and IFRA `/ATTACHLINK`/`/DETACHLINK`; `/Robmove` and `/Move` were not required for the master's demo path.
+
+Evidence artifacts were saved under:
+
+```text
+docs/validation/2026-05-19-gazebo-pick-place/
+```
+
+Build and test commands:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-skip ros2srrc_execution
+source install/setup.bash
+colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
+colcon test-result --verbose
+```
+
+Result: build passed with `31 packages finished`, continuing to skip `ros2srrc_execution`. Cognitive tests passed: `28 tests, 0 errors, 0 failures, 0 skipped`.
+
+The full stack was launched with simulation execution enabled:
+
+```bash
+ros2 launch irb120pe_cognitive cognitive_demo.launch.py \
+  dry_run:=false execution_backend:=moveit_sim llm_provider:=mock \
+  spawn_timeout:=120.0 start_legacy_interfaces:=false rviz_file:=True
+```
+
+The live validator spawned `BlueCube`, waited for perception and Planning Scene synchronization, called the reasoning service, and then verified stale removal:
+
+```text
+Live cube validation: PASS
+[PASS] predelete existing cube - Entity [BlueCube] does not exist
+[PASS] spawn cube - SpawnEntity: Successfully spawned entity [BlueCube]
+[PASS] wait for detections - matched ['blue_1']
+[PASS] verify Planning Scene add - ids=['blue_1', 'sticker_1']
+[PASS] mock reasoning dry-run - moveit_sim pick-and-place completed for BlueCube.
+[PASS] delete cube - Successfully deleted entity [BlueCube]
+[PASS] verify perception stale removal - remaining=[]
+[PASS] verify Planning Scene stale removal - ids=[]
+```
+
+Reasoning response:
+
+```text
+success=True
+status=moveit_sim pick-and-place completed for BlueCube.
+```
+
+Implementation notes:
+
+- Added `execution_backend:=moveit_sim` to the action adapter.
+- The backend sends pose goals through `/move_action`, commands the simulated gripper through `/egp64_finger_left_controller/gripper_cmd` and `/egp64_finger_right_controller/gripper_cmd`, attaches through `/ATTACHLINK`, detaches through `/DETACHLINK`, and returns status through the existing pick/place service and reasoning tool trace.
+- The backend removes the target cube and known marker/sticker collision IDs from each MoveGroup planning diff so the simulated gripper can approach the perceived object without disabling the general Planning Scene sync.
+- `cognitive_demo.launch.py` defaults to `execution_backend:=moveit_sim` while keeping `dry_run:=true`; non-dry-run simulation execution must still be explicitly requested with `dry_run:=false`.
+
+Result: the old `/Robmove` and `/Move` blocker is no longer a blocker for the master's Gazebo demo. The project now has a validated MoveIt-native simulation backend for cognitive pick/place.
+
+Repeatable operator notes were added in `docs/gazebo_pick_place_moveit_sim.md`.

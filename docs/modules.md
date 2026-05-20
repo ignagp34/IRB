@@ -10,7 +10,14 @@ The planning-scene synchronizer reads perceived objects and applies collision ob
 
 ## Action Adapter
 
-The action adapter is the only cognitive-stack node that commands robot motion. It validates numeric target poses, workspace limits, motion type, gripper calls, and destination slots before calling `/Robmove`, `/Move`, `/ATTACHLINK`, and `/DETACHLINK`.
+The action adapter is the only cognitive-stack node that commands robot motion. It validates numeric target poses, workspace limits, motion type, gripper calls, execution backend, and destination slots before execution.
+
+Backends:
+
+- `legacy`: calls `/Robmove`, `/Move`, `/ATTACHLINK`, and `/DETACHLINK` when the legacy execution dependency chain is available.
+- `moveit_sim`: Gazebo-only backend that calls MoveIt `/move_action`, the simulated gripper `gripper_cmd` actions, and IFRA `/ATTACHLINK`/`/DETACHLINK`. It removes the target cube and marker collision IDs from each MoveGroup goal so the simulated gripper can approach the perceived cube.
+
+Keep `dry_run:=true` for normal cognitive demonstrations. Use `dry_run:=false execution_backend:=moveit_sim` only for controlled Gazebo simulation validation.
 
 ## Reasoning
 
@@ -24,3 +31,11 @@ The reasoning node exposes a natural-language instruction service and implements
 ## Legacy Scripts
 
 The original `main.py`, `main_Gz.py`, and `main_GzSimplified.py` remain as deterministic reference demos. They are useful for validating the base simulation before using the cognitive loop.
+
+## Motion Validation Tools
+
+`motion_readiness_validator` captures non-moving evidence for controller, joint-state, MoveIt action, legacy action, and Planning Scene readiness.
+
+`moveit_motion_probe` validates the simulation-only MoveIt path with a tiny reversible `/move_action` goal. It is a diagnostic tool, not a cognitive action-adapter replacement, and it does not call `/Robmove`, `/Move`, LinkAttacher, gripper commands, or pick/place.
+
+The Gazebo pick/place validation path uses `action_adapter_node` with `execution_backend:=moveit_sim`; see `docs/gazebo_pick_place_moveit_sim.md`.

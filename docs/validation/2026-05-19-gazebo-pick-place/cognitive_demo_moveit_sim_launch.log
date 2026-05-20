@@ -1,0 +1,459 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-05-19-16-09-32-811864-DESKTOP-HKKIFGI-415
+[INFO] [launch]: Default logging verbosity is set to INFO
+
+===== ABB IRB-120 Pose Estimation: Robot Simulation+Control (irb120pe_moveit2) =====
+Robot configuration:
+
+- Cell layout: Cranfield University - IA Lab enclosure.
+- End-effector: Schunk EGP-64 parallel gripper.
+
+
+===== ABB IRB-120 Pose Estimation: Robot Simulation+Control (irb120pe_moveit2) =====
+Robot configuration:
+
+- Cell layout: Cranfield University - IA Lab enclosure.
+- End-effector: Schunk EGP-64 parallel gripper.
+
+[INFO] [gzserver-1]: process started with pid [445]
+[INFO] [gzclient-2]: process started with pid [447]
+[INFO] [spawn_entity.py-3]: process started with pid [449]
+[INFO] [static_transform_publisher-4]: process started with pid [451]
+[INFO] [robot_state_publisher-5]: process started with pid [453]
+[static_transform_publisher-4] [WARN] [1779199774.793400295] []: Old-style arguments are deprecated; see --help for new-style arguments
+[static_transform_publisher-4] [INFO] [1779199774.835663063] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'world' to 'base_link'
+[robot_state_publisher-5] [INFO] [1779199774.855834455] [robot_state_publisher]: got segment BASE_TF
+[robot_state_publisher-5] [INFO] [1779199774.856090705] [robot_state_publisher]: got segment CubeTray
+[robot_state_publisher-5] [INFO] [1779199774.856113736] [robot_state_publisher]: got segment EE_egp64
+[robot_state_publisher-5] [INFO] [1779199774.856125593] [robot_state_publisher]: got segment HMI_camera_link
+[robot_state_publisher-5] [INFO] [1779199774.856132616] [robot_state_publisher]: got segment TCP
+[robot_state_publisher-5] [INFO] [1779199774.856138899] [robot_state_publisher]: got segment aruco100
+[robot_state_publisher-5] [INFO] [1779199774.856145271] [robot_state_publisher]: got segment aruco101
+[robot_state_publisher-5] [INFO] [1779199774.856151564] [robot_state_publisher]: got segment aruco102
+[robot_state_publisher-5] [INFO] [1779199774.856157699] [robot_state_publisher]: got segment aruco103
+[robot_state_publisher-5] [INFO] [1779199774.856163637] [robot_state_publisher]: got segment base
+[robot_state_publisher-5] [INFO] [1779199774.856169723] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-5] [INFO] [1779199774.856175720] [robot_state_publisher]: got segment camera_link
+[robot_state_publisher-5] [INFO] [1779199774.856181826] [robot_state_publisher]: got segment cell
+[robot_state_publisher-5] [INFO] [1779199774.856187655] [robot_state_publisher]: got segment egp64_finger_left_link
+[robot_state_publisher-5] [INFO] [1779199774.856194067] [robot_state_publisher]: got segment egp64_finger_right_link
+[robot_state_publisher-5] [INFO] [1779199774.856200093] [robot_state_publisher]: got segment egp64_fingertip_left_link
+[robot_state_publisher-5] [INFO] [1779199774.856206081] [robot_state_publisher]: got segment egp64_fingertip_right_link
+[robot_state_publisher-5] [INFO] [1779199774.856212019] [robot_state_publisher]: got segment egp64_gripper_base_link
+[robot_state_publisher-5] [INFO] [1779199774.856217779] [robot_state_publisher]: got segment flange
+[robot_state_publisher-5] [INFO] [1779199774.856223786] [robot_state_publisher]: got segment link_1
+[robot_state_publisher-5] [INFO] [1779199774.856229763] [robot_state_publisher]: got segment link_2
+[robot_state_publisher-5] [INFO] [1779199774.856235978] [robot_state_publisher]: got segment link_3
+[robot_state_publisher-5] [INFO] [1779199774.856242103] [robot_state_publisher]: got segment link_4
+[robot_state_publisher-5] [INFO] [1779199774.856248110] [robot_state_publisher]: got segment link_5
+[robot_state_publisher-5] [INFO] [1779199774.856253979] [robot_state_publisher]: got segment link_6
+[robot_state_publisher-5] [INFO] [1779199774.856259986] [robot_state_publisher]: got segment schunk_coupler
+[robot_state_publisher-5] [INFO] [1779199774.856266101] [robot_state_publisher]: got segment tool0
+[robot_state_publisher-5] [INFO] [1779199774.856272049] [robot_state_publisher]: got segment world
+[spawn_entity.py-3] [INFO] [1779199775.316073082] [spawn_entity]: Spawn Entity started
+[spawn_entity.py-3] [INFO] [1779199775.317206569] [spawn_entity]: Loading entity published on topic robot_description
+[spawn_entity.py-3] [INFO] [1779199775.328825134] [spawn_entity]: Waiting for entity xml on robot_description
+[spawn_entity.py-3] [INFO] [1779199775.343404976] [spawn_entity]: Waiting for service /spawn_entity, timeout = 120
+[spawn_entity.py-3] [INFO] [1779199775.344343563] [spawn_entity]: Waiting for service /spawn_entity
+[gzserver-1] [WARN] [1779199778.926160108] [rcl]: Found remap rule 'model_states:=model_states'. This syntax is deprecated. Use '--ros-args --remap model_states:=model_states' instead.
+[gzserver-1] [WARN] [1779199778.926503705] [rcl]: Found remap rule 'link_states:=link_states'. This syntax is deprecated. Use '--ros-args --remap link_states:=link_states' instead.
+[gzserver-1] [INFO] [1779199778.956796485] [ros2_grasp.gazebo_ros_state]: Publishing states of gazebo models at [/ros2_grasp/model_states]
+[gzserver-1] [INFO] [1779199778.959318175] [ros2_grasp.gazebo_ros_state]: Publishing states of gazebo links at [/ros2_grasp/link_states]
+[spawn_entity.py-3] [INFO] [1779199779.128991576] [spawn_entity]: Calling service /spawn_entity
+[gzserver-1] [INFO] [1779199780.399496247] [HMI_camera_controller]: Publishing camera info to [/HMI_camera/camera_info]
+[gzserver-1] [INFO] [1779199780.445425463] [camera_controller]: Publishing camera info to [/camera/camera_info]
+[spawn_entity.py-3] [INFO] [1779199780.454084340] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [irb120]
+[INFO] [spawn_entity.py-3]: process has finished cleanly [pid 449]
+[INFO] [spawner-6]: process started with pid [644]
+[spawner-6] [INFO] [1779199781.772330281] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[gzserver-1] [INFO] [1779199782.129959986] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin
+[gzserver-1] [INFO] [1779199782.165010711] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in namespace: /
+[gzserver-1] [INFO] [1779199782.165249836] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in ros 2 node: gazebo_ros2_control
+[gzserver-1] [INFO] [1779199782.183635680] [gazebo_ros2_control]: connected to service!! robot_state_publisher
+[gzserver-1] [INFO] [1779199782.186072240] [gazebo_ros2_control]: Received urdf from param server, parsing...
+[gzserver-1] [INFO] [1779199782.186272229] [gazebo_ros2_control]: Loading parameter files /root/irb120_ws/install/irb120pe_gazebo/share/irb120pe_gazebo/config/irb120egp64_controller.yaml
+[gzserver-1] [INFO] [1779199782.233729036] [gazebo_ros2_control]: Loading joint: joint_1
+[gzserver-1] [INFO] [1779199782.233850775] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.233872259] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.233890769] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.233910577] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.233925509] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.233938296] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.236063592] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.237189870] [gazebo_ros2_control]: Loading joint: joint_2
+[gzserver-1] [INFO] [1779199782.237297137] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.237326572] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.237348077] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.237412478] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.237448792] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.237467231] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.238233052] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.238846605] [gazebo_ros2_control]: Loading joint: joint_3
+[gzserver-1] [INFO] [1779199782.238885802] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.238901174] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.238920379] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.238940084] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.238954996] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.238971104] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.239412355] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.241631192] [gazebo_ros2_control]: Loading joint: joint_4
+[gzserver-1] [INFO] [1779199782.241701583] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.241763980] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.241953259] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.241992108] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.242009780] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.242138398] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.246726399] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.249792026] [gazebo_ros2_control]: Loading joint: joint_5
+[gzserver-1] [INFO] [1779199782.249882827] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.249915534] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.250022934] [gazebo_ros2_control]: 			 found initial value: 1.570796
+[gzserver-1] [INFO] [1779199782.250062815] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.250085750] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.250102042] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.250738387] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.251720603] [gazebo_ros2_control]: Loading joint: joint_6
+[gzserver-1] [INFO] [1779199782.251805783] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.251835372] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.251850479] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.251871728] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.251887580] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.251899518] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.252399855] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.253095879] [gazebo_ros2_control]: Loading joint: egp64_finger_left_joint
+[gzserver-1] [INFO] [1779199782.253143344] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.253218222] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.253251991] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.253289798] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.253317159] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.253350673] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.254035342] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.254536578] [gazebo_ros2_control]: Loading joint: egp64_finger_right_joint
+[gzserver-1] [INFO] [1779199782.254574671] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.254588163] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.254602155] [gazebo_ros2_control]: 			 found initial value: 0.000000
+[gzserver-1] [INFO] [1779199782.254622433] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.254636108] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.254649150] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.255378218] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.256322852] [gazebo_ros2_control]: Loading joint: BASE_TF_joint
+[gzserver-1] [INFO] [1779199782.256361742] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.256380160] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.256416229] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.256432878] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.256445736] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.257661691] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.258270399] [gazebo_ros2_control]: Loading joint: TCP_joint
+[gzserver-1] [INFO] [1779199782.258305753] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.258318631] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.258331182] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.258342834] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.258353913] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.260430267] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.264182367] [gazebo_ros2_control]: Loading joint: EE_egp64_joint
+[gzserver-1] [INFO] [1779199782.264315932] [gazebo_ros2_control]: 	State:
+[gzserver-1] [INFO] [1779199782.264359462] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.264379648] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.264395409] [gazebo_ros2_control]: 	Command:
+[gzserver-1] [INFO] [1779199782.264411404] [gazebo_ros2_control]: 		 position
+[gzserver-1] [INFO] [1779199782.266889419] [gazebo_ros2_control]: 		 velocity
+[gzserver-1] [INFO] [1779199782.267815850] [resource_manager]: Initialize hardware 'GazeboSystem' 
+[gzserver-1] [INFO] [1779199782.268352043] [resource_manager]: Successful initialization of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1779199782.268685536] [resource_manager]: 'configure' hardware 'GazeboSystem' 
+[gzserver-1] [INFO] [1779199782.268719091] [resource_manager]: Successful 'configure' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1779199782.268744551] [resource_manager]: 'activate' hardware 'GazeboSystem' 
+[gzserver-1] [INFO] [1779199782.268759023] [resource_manager]: Successful 'activate' of hardware 'GazeboSystem'
+[gzserver-1] [INFO] [1779199782.268949641] [gazebo_ros2_control]: Loading controller_manager
+[gzserver-1] [WARN] [1779199782.386042361] [gazebo_ros2_control]:  Desired controller update period (0.02 s) is slower than the gazebo simulation period (0.001 s).
+[gzserver-1] [INFO] [1779199782.387237015] [gazebo_ros2_control]: Loaded gazebo_ros2_control.
+[gzserver-1] [INFO] [1779199782.537393442] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-6] [INFO] [1779199782.635016846] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[gzserver-1] [INFO] [1779199782.638618317] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[gzserver-1] [INFO] [1779199782.639463974] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[spawner-6] [INFO] [1779199782.711879866] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[INFO] [perception_node-7]: process started with pid [682]
+[INFO] [planning_scene_sync_node-8]: process started with pid [684]
+[INFO] [action_adapter_node-9]: process started with pid [686]
+[INFO] [langchain_reasoning_node-10]: process started with pid [688]
+[INFO] [spawner-6]: process has finished cleanly [pid 644]
+[INFO] [spawner-11]: process started with pid [690]
+[gzserver-1] [INFO] [1779199784.829478594] [controller_manager]: Loading controller 'irb120_controller'
+[gzserver-1] [WARN] [1779199784.950973544] [irb120_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[spawner-11] [INFO] [1779199785.019958317] [spawner_irb120_controller]: [94mLoaded [1mirb120_controller[0m
+[gzserver-1] [INFO] [1779199785.219526127] [controller_manager]: Configuring controller 'irb120_controller'
+[gzserver-1] [INFO] [1779199785.220056617] [irb120_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gzserver-1] [INFO] [1779199785.220223666] [irb120_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gzserver-1] [INFO] [1779199785.220371935] [irb120_controller]: Using 'splines' interpolation method.
+[gzserver-1] [INFO] [1779199785.235879560] [irb120_controller]: Controller state will be published at 100.00 Hz.
+[gzserver-1] [INFO] [1779199785.439668742] [irb120_controller]: Action status changes will be monitored at 20.00 Hz.
+[spawner-11] [INFO] [1779199785.562338398] [spawner_irb120_controller]: [92mConfigured and activated [1mirb120_controller[0m
+[INFO] [spawner-11]: process has finished cleanly [pid 690]
+[INFO] [spawner-12]: process started with pid [759]
+[spawner-12] [INFO] [1779199786.997209186] [spawner_egp64_finger_left_controller]: waiting for service /controller_manager/list_controllers to become available...
+[gzserver-1] [INFO] [1779199787.596877575] [controller_manager]: Loading controller 'egp64_finger_left_controller'
+[spawner-12] [INFO] [1779199787.678875893] [spawner_egp64_finger_left_controller]: [94mLoaded [1megp64_finger_left_controller[0m
+[gzserver-1] [INFO] [1779199787.689266656] [controller_manager]: Configuring controller 'egp64_finger_left_controller'
+[gzserver-1] [INFO] [1779199787.690036083] [egp64_finger_left_controller]: Action status changes will be monitored at 20.000000 Hz.
+[spawner-12] [INFO] [1779199787.767718284] [spawner_egp64_finger_left_controller]: [92mConfigured and activated [1megp64_finger_left_controller[0m
+[INFO] [spawner-12]: process has finished cleanly [pid 759]
+[INFO] [spawner-13]: process started with pid [787]
+[spawner-13] [INFO] [1779199789.267501078] [spawner_egp64_finger_right_controller]: waiting for service /controller_manager/list_controllers to become available...
+[gzserver-1] [INFO] [1779199789.526885913] [controller_manager]: Loading controller 'egp64_finger_right_controller'
+[spawner-13] [INFO] [1779199789.605664185] [spawner_egp64_finger_right_controller]: [94mLoaded [1megp64_finger_right_controller[0m
+[gzserver-1] [INFO] [1779199789.612440887] [controller_manager]: Configuring controller 'egp64_finger_right_controller'
+[gzserver-1] [INFO] [1779199789.612617195] [egp64_finger_right_controller]: Action status changes will be monitored at 20.000000 Hz.
+[spawner-13] [INFO] [1779199789.703307710] [spawner_egp64_finger_right_controller]: [92mConfigured and activated [1megp64_finger_right_controller[0m
+[INFO] [spawner-13]: process has finished cleanly [pid 787]
+[INFO] [move_group-14]: process started with pid [809]
+[move_group-14] [WARN] [1779199792.477054613] [move_group.move_group]: Falling back to using the the move_group node namespace (deprecated behavior).
+[move_group-14] [INFO] [1779199792.498043925] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0 seconds
+[move_group-14] [INFO] [1779199792.498210301] [moveit_robot_model.robot_model]: Loading robot model 'irb120'...
+[move_group-14] [WARN] [1779199793.054978366] [moveit_robot_model.robot_model]: Link BASE_TF has visual geometry but no collision geometry. Collision geometry will be left empty. Fix your URDF file by explicitly specifying collision geometry.
+[move_group-14] [WARN] [1779199793.058087472] [moveit_robot_model.robot_model]: Link TCP has visual geometry but no collision geometry. Collision geometry will be left empty. Fix your URDF file by explicitly specifying collision geometry.
+[move_group-14] [WARN] [1779199793.058193553] [moveit_robot_model.robot_model]: Link EE_egp64 has visual geometry but no collision geometry. Collision geometry will be left empty. Fix your URDF file by explicitly specifying collision geometry.
+[move_group-14] [INFO] [1779199794.137524831] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-14] [INFO] [1779199794.138009214] [moveit.ros_planning_interface.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-14] [INFO] [1779199794.140899208] [moveit_ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-14] [INFO] [1779199794.142610120] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-14] [INFO] [1779199794.142760257] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[move_group-14] [INFO] [1779199794.144633939] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-14] [INFO] [1779199794.144787199] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-14] [INFO] [1779199794.147171866] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-14] [INFO] [1779199794.149165407] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-14] [WARN] [1779199794.150930699] [moveit.ros.occupancy_map_monitor.middleware_handle]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-14] [ERROR] [1779199794.151007940] [moveit.ros.occupancy_map_monitor.middleware_handle]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-14] [INFO] [1779199797.393249488] [moveit.ros_planning_interface.moveit_cpp]: Loading planning pipeline 'move_group'
+[move_group-14] [INFO] [1779199797.417194293] [moveit.pilz_industrial_motion_planner.joint_limits_aggregator]: Reading limits from namespace robot_description_planning
+[move_group-14] [INFO] [1779199797.439250321] [moveit.pilz_industrial_motion_planner]: Available plugins: pilz_industrial_motion_planner/PlanningContextLoaderCIRC pilz_industrial_motion_planner/PlanningContextLoaderLIN pilz_industrial_motion_planner/PlanningContextLoaderPTP 
+[move_group-14] [INFO] [1779199797.440882720] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderCIRC
+[move_group-14] [INFO] [1779199797.453995963] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [CIRC]
+[move_group-14] [INFO] [1779199797.454134850] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderLIN
+[move_group-14] [INFO] [1779199797.461966655] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [LIN]
+[move_group-14] [INFO] [1779199797.462089740] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderPTP
+[move_group-14] [INFO] [1779199797.466032159] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [PTP]
+[move_group-14] [INFO] [1779199797.466160111] [moveit.ros_planning.planning_pipeline]: Using planning interface 'Pilz Industrial Motion Planner'
+[move_group-14] [INFO] [1779199797.582660463] [moveit.plugins.moveit_simple_controller_manager]: Added FollowJointTrajectory controller for irb120_controller
+[move_group-14] [INFO] [1779199797.582766718] [moveit.plugins.moveit_simple_controller_manager]: Max effort set to 0.0
+[move_group-14] [INFO] [1779199797.607605017] [moveit.plugins.moveit_simple_controller_manager]: Added GripperCommand controller for egp64_finger_left_controller
+[move_group-14] [INFO] [1779199797.607695279] [moveit.plugins.moveit_simple_controller_manager]: Max effort set to 0.0
+[move_group-14] [INFO] [1779199797.624031868] [moveit.plugins.moveit_simple_controller_manager]: Added GripperCommand controller for egp64_finger_right_controller
+[move_group-14] [INFO] [1779199797.624364959] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199797.624416511] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199797.626133609] [moveit_ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-14] [INFO] [1779199797.626173005] [move_group.move_group]: MoveGroup debug mode is ON
+[move_group-14] [INFO] [1779199797.744564809] [moveit.pilz_industrial_motion_planner.move_group_sequence_action]: initialize move group sequence action
+[move_group-14] [INFO] [1779199797.760496805] [moveit.pilz_industrial_motion_planner.joint_limits_aggregator]: Reading limits from namespace robot_description_planning
+[move_group-14] [WARN] [1779199797.762294795] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762618305] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762685476] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762743349] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762787026] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762833227] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762876632] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762933010] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.762985602] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763031026] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763090312] [move_group]: Failed loading deceleration limits
+[move_group-14] [INFO] [1779199797.763282235] [moveit.pilz_industrial_motion_planner.joint_limits_aggregator]: Reading limits from namespace robot_description_planning
+[move_group-14] [WARN] [1779199797.763337119] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763390136] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763437579] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763478994] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763522086] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763612752] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763665303] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763722752] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763764238] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763802443] [move_group]: Failed loading deceleration limits
+[move_group-14] [WARN] [1779199797.763863173] [move_group]: Failed loading deceleration limits
+[move_group-14] [INFO] [1779199797.767694228] [move_group.move_group]: 
+[move_group-14] 
+[move_group-14] ********************************************************
+[move_group-14] * MoveGroup using: 
+[move_group-14] *     - ApplyPlanningSceneService
+[move_group-14] *     - ClearOctomapService
+[move_group-14] *     - CartesianPathService
+[move_group-14] *     - ExecuteTrajectoryAction
+[move_group-14] *     - GetPlanningSceneService
+[move_group-14] *     - KinematicsService
+[move_group-14] *     - MoveAction
+[move_group-14] *     - MotionPlanService
+[move_group-14] *     - QueryPlannersService
+[move_group-14] *     - StateValidationService
+[move_group-14] *     - SequenceAction
+[move_group-14] *     - SequenceService
+[move_group-14] ********************************************************
+[move_group-14] 
+[move_group-14] [INFO] [1779199797.767922125] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context using planning plugin pilz_industrial_motion_planner/CommandPlanner
+[move_group-14] [INFO] [1779199797.767948739] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context initialization complete
+[move_group-14] [96mLoading 'move_group/ApplyPlanningSceneService'...
+[move_group-14] [0m[96mLoading 'move_group/ClearOctomapService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupCartesianPathService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupKinematicsService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupMoveAction'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupPlanService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-14] [0m[96mLoading 'move_group/MoveGroupStateValidationService'...
+[move_group-14] [0m[96mLoading 'pilz_industrial_motion_planner/MoveGroupSequenceAction'...
+[move_group-14] [0m[96mLoading 'pilz_industrial_motion_planner/MoveGroupSequenceService'...
+[move_group-14] [0m[92m
+[move_group-14] You can start planning now!
+[move_group-14] 
+[move_group-14] [INFO] [1779199802.370553396] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199802.371266578] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199802.372128322] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199802.372329263] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199802.372443715] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199802.372871185] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_2', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199802.372922820] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199802.372950193] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199802.373615462] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199802.373740086] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199802.429872554] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199802.429975116] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199802.430077531] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199802.430527328] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199802.430647720] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199802.430689182] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199802.430996555] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199802.432476753] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199802.432767709] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199802.433338330] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199802.433383838] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199812.874766585] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199812.917319515] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199812.917636756] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199812.920856599] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.
+[move_group-14] [INFO] [1779199812.938834748] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199812.939319025] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199812.939567630] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199812.939610854] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199812.939637399] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199812.939870085] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_2', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199812.939939814] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199812.939966147] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199812.940361699] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199812.940424627] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199812.945976955] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199812.946064961] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199812.946112598] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199812.946312909] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199812.946421226] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199812.946562708] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199812.946795222] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199812.947341455] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199812.947430301] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199812.948071290] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199812.948101702] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199813.785551688] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199813.808151720] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199813.813251408] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199813.816565359] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.
+[gzserver-1] [INFO] [1779199813.829409506] [egp64_finger_left_controller]: Received & accepted new action goal
+[gzserver-1] [INFO] [1779199813.886573461] [egp64_finger_right_controller]: Received & accepted new action goal
+[move_group-14] [INFO] [1779199813.965750176] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199813.966208703] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199813.966480651] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199813.966523914] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199813.966611410] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199813.966800014] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_2', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199813.966823742] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199813.966834820] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199813.967061785] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199813.967114627] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199813.979520982] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199813.979631720] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199813.979676694] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199813.979890433] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199813.979997130] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199813.980031694] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199813.980261889] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199813.980860866] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199813.980933274] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199813.981394373] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199813.981427063] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199814.774576184] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199814.791206822] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199814.791465850] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199814.800155906] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.
+[move_group-14] [INFO] [1779199814.811201407] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199814.811551766] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199814.811671434] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199814.811692206] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199814.811706584] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199814.811816190] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_2', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199814.811830092] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199814.811839029] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199814.811934855] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199814.811962902] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199815.100954839] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199815.101116314] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199815.101195704] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199815.101455651] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199815.101528542] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199815.101566052] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199815.101833244] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199815.102964529] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199815.103061153] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199815.104307114] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199815.104374247] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199835.714364785] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199835.721387428] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199835.721634215] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199835.731741648] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.
+[move_group-14] [INFO] [1779199835.752294716] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199835.752638461] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199835.764617582] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199835.764840616] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199835.764869676] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199835.765074254] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199835.765106802] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199835.765318741] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199835.765357402] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199835.782533746] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199835.782738972] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199835.782831626] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199835.783256477] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199835.783362682] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199835.783398326] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199835.783771180] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199835.784604578] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199835.784711540] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199835.785406082] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199835.785443898] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199836.578779431] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199836.622702782] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199836.622943936] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199836.623415265] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.
+[gzserver-1] [INFO] [1779199836.634371934] [egp64_finger_left_controller]: Received & accepted new action goal
+[gzserver-1] [INFO] [1779199836.691286846] [egp64_finger_right_controller]: Received & accepted new action goal
+[move_group-14] [INFO] [1779199839.728049758] [moveit_move_group_default_capabilities.move_action_capability]: Received request
+[move_group-14] [INFO] [1779199839.728271208] [moveit_move_group_default_capabilities.move_action_capability]: executing..
+[move_group-14] [INFO] [1779199839.728366527] [moveit_move_group_default_capabilities.move_action_capability]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-14] [WARN] [1779199839.728397936] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-14] [WARN] [1779199839.728415528] [moveit_move_group_capabilities_base.move_group_capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-14] [WARN] [1779199839.728508919] [moveit_planning_scene.planning_scene]: Tried to remove world object 'blue_1', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199839.728547047] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_2', but it does not exist in this scene.
+[move_group-14] [WARN] [1779199839.728555296] [moveit_planning_scene.planning_scene]: Tried to remove world object 'sticker_3', but it does not exist in this scene.
+[move_group-14] [INFO] [1779199839.728563973] [moveit_ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-14] [INFO] [1779199839.728681229] [moveit.pilz_industrial_motion_planner.trajectory_generator_ptp]: Initialized Point-to-Point Trajectory Generator.
+[move_group-14] [INFO] [1779199839.728766747] [moveit.pilz_industrial_motion_planner.trajectory_generator]: Generating PTP trajectory...
+[move_group-14] [INFO] [1779199839.734772786] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199839.734934798] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199839.734987457] [moveit_ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-14] [INFO] [1779199839.735220636] [moveit_ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-14] [INFO] [1779199839.735301086] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199839.735377082] [moveit.plugins.moveit_simple_controller_manager]: Returned 3 controllers in list
+[move_group-14] [INFO] [1779199839.735631442] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to irb120_controller
+[gzserver-1] [INFO] [1779199839.736843772] [irb120_controller]: Received new action goal
+[gzserver-1] [INFO] [1779199839.737162873] [irb120_controller]: Accepted new action goal
+[move_group-14] [INFO] [1779199839.738651443] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: irb120_controller started execution
+[move_group-14] [INFO] [1779199839.738706676] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gzserver-1] [INFO] [1779199841.361097792] [irb120_controller]: Goal reached, success!
+[move_group-14] [INFO] [1779199841.378439850] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'irb120_controller' successfully finished
+[move_group-14] [INFO] [1779199841.378656990] [moveit_ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-14] [INFO] [1779199841.385613906] [moveit_move_group_default_capabilities.move_action_capability]: Solution was found and executed.

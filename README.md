@@ -328,6 +328,138 @@ Don't forget to give the project a star! Thanks you very much!
 
 This repository now includes a cognitive ROS 2 extension for the project **Cognitive Industrial Sorting Cobot - ABB IRB-120 Vision-Action Loop**. The original deterministic IFRA-Cranfield demos are preserved, and the new packages add a separated perception, planning-scene, action-adapter, and LangChain reasoning loop.
 
+## Resumen En Espanol: Instalacion Y Preparacion
+
+Esta extension esta preparada para una demo **solo en Gazebo** con ROS 2 Humble, MoveIt 2 y Gazebo Classic dentro de WSL 2 Ubuntu 22.04. La ruta validada no depende de `/Robmove` ni de `/Move`; usa `execution_backend:=moveit_sim`, MoveIt `/move_action`, los controladores simulados del gripper y los servicios Gazebo de IFRA LinkAttacher.
+
+Workspace recomendado:
+
+```bash
+mkdir -p /root/irb120_ws/src
+cd /root/irb120_ws/src
+```
+
+Instala la base de ROS 2 Humble, MoveIt 2, Gazebo y herramientas de compilacion:
+
+```bash
+sudo apt update
+sudo apt install -y \
+  ros-humble-desktop \
+  ros-humble-moveit \
+  ros-humble-gazebo-ros-pkgs \
+  python3-colcon-common-extensions \
+  python3-rosdep \
+  python3-vcstool \
+  python3-opencv \
+  python3-pip
+```
+
+Instala dependencias Python usadas por percepcion y razonamiento:
+
+```bash
+pip install ultralytics langchain langchain-openai langchain-ollama langchain-huggingface
+```
+
+Clona o copia este repositorio en `/root/irb120_ws/src/irb120_PoseEstimation`. Asegura tambien las dependencias fuente usadas por el proyecto, especialmente `IFRA_LinkAttacher` y `ros2_SimRealRobotControl`, dentro de `/root/irb120_ws/src`.
+
+Compila la ruta validada saltando `ros2srrc_execution`:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install --packages-skip ros2srrc_execution
+source install/setup.bash
+```
+
+Ejecuta las pruebas principales:
+
+```bash
+colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
+colcon test-result --verbose
+```
+
+Resultado validado actual: `28 tests, 0 errors, 0 failures`.
+
+## Resumen En Espanol: Flujo Completo De La Demo Gazebo
+
+1. Abre una terminal WSL y prepara el entorno:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+```
+
+2. Lanza Gazebo, MoveIt, percepcion, sincronizacion de Planning Scene, action adapter y razonamiento mock:
+
+```bash
+ros2 launch irb120pe_cognitive cognitive_demo.launch.py \
+  dry_run:=false llm_provider:=mock execution_backend:=moveit_sim \
+  spawn_timeout:=120.0 start_legacy_interfaces:=false rviz_file:=True
+```
+
+3. En otra terminal WSL, prepara el entorno de nuevo:
+
+```bash
+cd /root/irb120_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+```
+
+4. Comprueba que los servicios y acciones principales estan disponibles:
+
+```bash
+ros2 service list | grep -E "/ATTACHLINK|/DETACHLINK|/irb120pe/perception/get_detected_objects|/irb120pe/reasoning/execute_instruction"
+ros2 action list -t | grep -E "/move_action|gripper_cmd|/irb120_controller/follow_joint_trajectory"
+```
+
+5. Genera un cubo azul visible en Gazebo:
+
+```bash
+ros2 run irb120pe_cognitive gazebo_cube_helper spawn \
+  --cube BlueCube --name BlueCube --x 0.55 --y 0.52 --z 0.88 --replace
+```
+
+6. Comprueba percepcion estructurada:
+
+```bash
+ros2 service call /irb120pe/perception/get_detected_objects \
+  irb120pe_cognitive_interfaces/srv/GetDetectedObjects "{}"
+```
+
+7. Ejecuta una instruccion en lenguaje natural:
+
+```bash
+ros2 service call /irb120pe/reasoning/execute_instruction \
+  irb120pe_cognitive_interfaces/srv/ExecuteInstruction \
+  "{instruction: 'Pick the blue cube and place it in the right container'}"
+```
+
+Respuesta esperada:
+
+```text
+success=True
+status=moveit_sim pick-and-place completed for BlueCube.
+```
+
+8. Limpia el cubo al terminar:
+
+```bash
+ros2 run irb120pe_cognitive gazebo_cube_helper delete --name BlueCube
+```
+
+9. Para repetir la validacion automatizada, usa la guia:
+
+```text
+docs/gazebo_pick_place_moveit_sim.md
+```
+
+Evidencia validada:
+
+```text
+docs/validation/2026-05-19-gazebo-pick-place/
+```
+
 ## Architecture
 
 ```text

@@ -14,12 +14,19 @@ def generate_launch_description():
             DeclareLaunchArgument("llm_provider", default_value="mock"),
             DeclareLaunchArgument("llm_model", default_value="gpt-4o-mini"),
             DeclareLaunchArgument("dry_run", default_value="false"),
+            DeclareLaunchArgument("execution_backend", default_value="legacy"),
             Node(
                 package="irb120pe_cognitive",
                 executable="action_adapter_node",
                 name="irb120pe_action_adapter",
                 output="screen",
-                parameters=[config, {"dry_run": LaunchConfiguration("dry_run")}],
+                parameters=[
+                    config,
+                    {
+                        "dry_run": LaunchConfiguration("dry_run"),
+                        "execution_backend": LaunchConfiguration("execution_backend"),
+                    },
+                ],
             ),
             Node(
                 package="irb120pe_cognitive",

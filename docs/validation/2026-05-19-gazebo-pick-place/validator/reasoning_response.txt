@@ -1,0 +1,133 @@
+success=True
+status=moveit_sim pick-and-place completed for BlueCube.
+tool_trace=[
+  {
+    "tool": "get_detected_objects",
+    "output": [
+      {
+        "object_id": "blue_1",
+        "label": "blue",
+        "confidence": 0.9056271910667419,
+        "pose": {
+          "frame_id": "world",
+          "x": 0.5492970479329427,
+          "y": 0.6038840967814127,
+          "z": 0.9,
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        },
+        "timestamp": {
+          "sec": 17,
+          "nanosec": 500000000
+        }
+      },
+      {
+        "object_id": "sticker_1",
+        "label": "sticker",
+        "confidence": 0.8839583992958069,
+        "pose": {
+          "frame_id": "world",
+          "x": 0.5493713277180989,
+          "y": 0.6055189039442275,
+          "z": 0.9,
+          "qx": 0.0,
+          "qy": 0.0,
+          "qz": 0.0,
+          "qw": 1.0
+        },
+        "timestamp": {
+          "sec": 17,
+          "nanosec": 500000000
+        }
+      }
+    ]
+  },
+  {
+    "tool": "get_available_slots",
+    "output": [
+      {
+        "slot_id": "slot_a",
+        "label": "white_slot",
+        "aliases": [
+          "slot_a",
+          "white_slot",
+          "left_container"
+        ],
+        "pose": {
+          "x": 0.105,
+          "y": 0.1,
+          "z": 1.08,
+          "qx": 0.707,
+          "qy": 0.707,
+          "qz": 0.0,
+          "qw": 0.0
+        }
+      },
+      {
+        "slot_id": "slot_b",
+        "label": "black_slot",
+        "aliases": [
+          "slot_b",
+          "black_slot"
+        ],
+        "pose": {
+          "x": 0.105,
+          "y": 0.145,
+          "z": 1.08,
+          "qx": 0.707,
+          "qy": 0.707,
+          "qz": 0.0,
+          "qw": 0.0
+        }
+      },
+      {
+        "slot_id": "slot_c",
+        "label": "blue_slot",
+        "aliases": [
+          "slot_c",
+          "blue_slot",
+          "right_container"
+        ],
+        "pose": {
+          "x": 0.15,
+          "y": 0.145,
+          "z": 1.08,
+          "qx": 0.707,
+          "qy": 0.707,
+          "qz": 0.0,
+          "qw": 0.0
+        }
+      },
+      {
+        "slot_id": "unknown_slot",
+        "label": "unknown_slot",
+        "aliases": [
+          "unknown_slot",
+          "no_detection_slot"
+        ],
+        "pose": {
+          "x": 0.15,
+          "y": 0.1,
+          "z": 1.08,
+          "qx": 0.707,
+          "qy": 0.707,
+          "qz": 0.0,
+          "qw": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "tool": "pick_and_place_tool",
+    "input": {
+      "object_id": "blue_1",
+      "target_slot": "slot_c"
+    },
+    "output": {
+      "success": true,
+      "status": "moveit_sim pick-and-place completed for BlueCube."
+    }
+  }
+]

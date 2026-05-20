@@ -11,6 +11,7 @@
     move_arm_service: /irb120pe/action/move_arm
     pick_and_place_service: /irb120pe/action/pick_and_place
     execute_instruction_service: /irb120pe/reasoning/execute_instruction
+    execution_backend: legacy
 
     yolo_model_path: ""
     yolo_confidence: 0.35
@@ -18,6 +19,29 @@
     object_stale_after_sec: 3.0
     cube_size_m: 0.035
     table_height_m: 0.88
+    pick_approach_z: 1.10
+    pick_z: 1.07
+    place_approach_offset_z: 0.031
+
+    moveit_group_name: irb120_arm
+    moveit_end_effector_link: tool0
+    moveit_planner_id: PTP
+    moveit_planning_time: 10.0
+    moveit_velocity_scaling: 0.05
+    moveit_acceleration_scaling: 0.05
+    moveit_action_timeout: 60.0
+    moveit_position_tolerance: 0.01
+    moveit_orientation_tolerance: 0.25
+    moveit_grasp_orientation: [0.707, 0.707, 0.0, 0.0]
+    moveit_extra_collision_object_ids: [sticker_1, sticker_2, sticker_3]
+    moveit_use_gripper_controllers: true
+    gripper_left_action: /egp64_finger_left_controller/gripper_cmd
+    gripper_right_action: /egp64_finger_right_controller/gripper_cmd
+    gripper_open_position: 0.0
+    gripper_closed_position: 0.01
+    gripper_max_effort: 10.0
+    robot_model_name: irb120
+    robot_attach_link: EE_egp64
 
     dry_run: false
     llm_provider: mock
