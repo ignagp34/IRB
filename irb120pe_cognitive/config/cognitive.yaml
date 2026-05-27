@@ -26,6 +26,9 @@
     table_height_m: 0.88
     pick_approach_z: 1.10
     pick_z: 1.07
+    # tool0 is above the physical gripper; retain that offset when detection z changes.
+    pick_z_offset_from_object: 0.17
+    pick_approach_offset_from_object: 0.20
     place_approach_offset_z: 0.10
 
     moveit_group_name: irb120_arm

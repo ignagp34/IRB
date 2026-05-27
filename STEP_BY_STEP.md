@@ -83,21 +83,28 @@ sudo rosdep init || true
 rosdep update
 ```
 
-Install the Python packages. **Pin NumPy below 2.0** — ROS 2 Humble's
-`cv_bridge` and OpenCV were compiled against NumPy 1.x, so a newer NumPy
-breaks perception with `_ARRAY_API not found`:
+Install the Python packages. **Pin NumPy and OpenCV below 2.0** —
+ROS 2 Humble's `cv_bridge`, `matplotlib`, and the system OpenCV were
+compiled against NumPy 1.x, so a newer NumPy breaks perception with
+`_ARRAY_API not found`. `ultralytics` may otherwise pull NumPy 2.x
+and a NumPy-2-only OpenCV. Install them in one command so `pip`
+resolves the constraints together:
 
 ```bash
-pip install --user "numpy<2"
-pip install --user ultralytics langchain langchain-openai
+pip install --user "numpy<2" "opencv-python<4.12" ultralytics langchain langchain-openai
 ```
 
 If you already installed `ultralytics` and Gazebo's perception node dies
-with `numpy.core.multiarray failed to import`, just run the first line
-above (`pip install --user "numpy<2"`) and relaunch.
+with `numpy.core.multiarray failed to import`, run:
+
+```bash
+pip install --user --upgrade "numpy<2" "opencv-python<4.12"
+```
+
+Then relaunch the stack.
 
 Also make sure `pytest` is recent enough (the system 6.2 conflicts with
-the user-installed `anyio`):
+the user-installed `anyio` plugin that requires pytest ≥ 7.0):
 
 ```bash
 pip install --user --upgrade "pytest>=7.4" pytest-asyncio
@@ -341,10 +348,11 @@ WSL needs WSLg. From PowerShell: `wsl --update`. Reboot Windows. Try
 
 ### `perception_node` dies with `_ARRAY_API not found` / `numpy.core.multiarray failed to import`
 
-Your user-level NumPy is 2.x but ROS Humble needs 1.x. Fix:
+Your user-level NumPy or OpenCV is incompatible with ROS Humble's
+`cv_bridge`. Fix both constraints:
 
 ```bash
-pip install --user "numpy<2"
+pip install --user --upgrade "numpy<2" "opencv-python<4.12"
 ```
 
 Then Ctrl-C the launch and restart it.
@@ -385,6 +393,13 @@ ros2 service call /irb120pe/perception/get_detected_objects \
 ### Arm doesn't move
 Check that `execution_backend:=moveit_sim` is set in your launch command
 (not `legacy`). Confirm `/move_action` exists: `ros2 action list | grep move_action`.
+
+### Pick height looks wrong
+The IRB-120 is mounted on the cell pedestal: in this world `base_link` is
+near `z=0.861`, not on the floor. Do not subtract that height from world-frame
+poses. The action adapter calculates source goals from detected object Z plus
+the configured `tool0`-to-gripper offsets (`pick_z_offset_from_object` and
+`pick_approach_offset_from_object`).
 
 ### Cube doesn't drop in the slot (gripper missed)
 The `summary.txt` will mark `cubes reached planned targets` as FAIL.

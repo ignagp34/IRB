@@ -4,6 +4,7 @@ from shape_msgs.msg import SolidPrimitive
 
 from irb120pe_cognitive.action_adapter_node import (
     build_move_group_pose_goal,
+    compute_pick_heights,
     normalize_execution_backend,
 )
 from irb120pe_cognitive.validation import ValidationError
@@ -29,6 +30,42 @@ def test_normalize_execution_backend_accepts_supported_names():
 def test_normalize_execution_backend_rejects_unknown_name():
     with pytest.raises(ValidationError, match="execution_backend"):
         normalize_execution_backend("hardware")
+
+
+def test_compute_pick_heights_preserves_calibrated_tool_offset():
+    pick_z, approach_z = compute_pick_heights(
+        0.90,
+        configured_pick_z=1.07,
+        configured_pick_approach_z=1.10,
+        pick_z_offset_from_object=0.17,
+        pick_approach_offset_from_object=0.20,
+    )
+    assert pick_z == pytest.approx(1.07)
+    assert approach_z == pytest.approx(1.10)
+
+
+def test_compute_pick_heights_tracks_an_elevated_detected_object():
+    pick_z, approach_z = compute_pick_heights(
+        0.96,
+        configured_pick_z=1.07,
+        configured_pick_approach_z=1.10,
+        pick_z_offset_from_object=0.17,
+        pick_approach_offset_from_object=0.20,
+    )
+    assert pick_z == pytest.approx(1.13)
+    assert approach_z == pytest.approx(1.16)
+
+
+def test_compute_pick_heights_falls_back_without_valid_detection_height():
+    pick_z, approach_z = compute_pick_heights(
+        float("nan"),
+        configured_pick_z=1.07,
+        configured_pick_approach_z=1.10,
+        pick_z_offset_from_object=0.17,
+        pick_approach_offset_from_object=0.20,
+    )
+    assert pick_z == pytest.approx(1.07)
+    assert approach_z == pytest.approx(1.10)
 
 
 def test_build_move_group_pose_goal_uses_pose_constraints_for_tool0():

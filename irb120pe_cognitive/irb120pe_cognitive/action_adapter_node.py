@@ -36,6 +36,23 @@ def normalize_execution_backend(value: Any) -> str:
     return backend
 
 
+def compute_pick_heights(
+    perceived_z: float,
+    *,
+    configured_pick_z: float,
+    configured_pick_approach_z: float,
+    pick_z_offset_from_object: float,
+    pick_approach_offset_from_object: float,
+) -> tuple[float, float]:
+    """Compute tool0 pick goals while preserving the gripper-to-tool offset."""
+    if not math.isfinite(perceived_z) or perceived_z <= 1e-6:
+        return configured_pick_z, configured_pick_approach_z
+    return (
+        perceived_z + pick_z_offset_from_object,
+        perceived_z + pick_approach_offset_from_object,
+    )
+
+
 def build_move_group_pose_goal(
     pose: PoseStamped,
     *,
@@ -108,6 +125,8 @@ class ActionAdapterNode(Node):
         self.declare_parameter("pick_and_place_service", "/irb120pe/action/pick_and_place")
         self.declare_parameter("pick_approach_z", 1.10)
         self.declare_parameter("pick_z", 1.07)
+        self.declare_parameter("pick_z_offset_from_object", 0.17)
+        self.declare_parameter("pick_approach_offset_from_object", 0.20)
         self.declare_parameter("place_approach_offset_z", 0.031)
         self.declare_parameter("execution_backend", "legacy")
         self.declare_parameter("moveit_group_name", "irb120_arm")
@@ -220,10 +239,25 @@ class ActionAdapterNode(Node):
                 target_pose_values = slot.pose
                 target_label = slot.key
 
-            x, y, _ = validate_coordinates(
+            perceived_z = float(source_pose.pose.position.z)
+            pick_z, pick_approach_z = compute_pick_heights(
+                perceived_z,
+                configured_pick_z=float(self.get_parameter("pick_z").value),
+                configured_pick_approach_z=float(self.get_parameter("pick_approach_z").value),
+                pick_z_offset_from_object=float(self.get_parameter("pick_z_offset_from_object").value),
+                pick_approach_offset_from_object=float(self.get_parameter("pick_approach_offset_from_object").value),
+            )
+
+            x, y, pick_z_validated = validate_coordinates(
                 source_pose.pose.position.x,
                 source_pose.pose.position.y,
-                float(self.get_parameter("pick_z").value),
+                pick_z,
+                self.workspace_limits,
+            )
+            _, _, pick_approach_z_validated = validate_coordinates(
+                x,
+                y,
+                pick_approach_z,
                 self.workspace_limits,
             )
 
@@ -236,7 +270,15 @@ class ActionAdapterNode(Node):
             if self.execution_backend == "moveit_sim" and request.object_id:
                 extra_ids = [str(value) for value in self.get_parameter("moveit_extra_collision_object_ids").value]
                 self._moveit_sim_collision_objects_to_remove = [request.object_id, *extra_ids]
-            ok, status = self._execute_pick_and_place(x, y, source_pose, target_pose_values, source_model)
+            ok, status = self._execute_pick_and_place(
+                x,
+                y,
+                source_pose,
+                target_pose_values,
+                source_model,
+                pick_z=pick_z_validated,
+                pick_approach_z=pick_approach_z_validated,
+            )
             response.success = ok
             response.status = status
         except Exception as exc:
@@ -271,10 +313,20 @@ class ActionAdapterNode(Node):
         source_pose: PoseStamped,
         slot_pose_values: tuple[float, float, float, float, float, float, float],
         source_model: str | None,
+        pick_z: float | None = None,
+        pick_approach_z: float | None = None,
     ) -> tuple[bool, str]:
+        if pick_z is None:
+            pick_z = float(self.get_parameter("pick_z").value)
+        if pick_approach_z is None:
+            pick_approach_z = float(self.get_parameter("pick_approach_z").value)
         if self.execution_backend == "moveit_sim":
-            return self._execute_moveit_sim_pick_and_place(x, y, slot_pose_values, source_model)
-        return self._execute_legacy_pick_and_place(x, y, source_pose, slot_pose_values, source_model)
+            return self._execute_moveit_sim_pick_and_place(
+                x, y, slot_pose_values, source_model, pick_z=pick_z, pick_approach_z=pick_approach_z
+            )
+        return self._execute_legacy_pick_and_place(
+            x, y, source_pose, slot_pose_values, source_model, pick_z=pick_z, pick_approach_z=pick_approach_z
+        )
 
     def _execute_legacy_pick_and_place(
         self,
@@ -283,14 +335,20 @@ class ActionAdapterNode(Node):
         source_pose: PoseStamped,
         slot_pose_values: tuple[float, float, float, float, float, float, float],
         source_model: str | None,
+        pick_z: float | None = None,
+        pick_approach_z: float | None = None,
     ) -> tuple[bool, str]:
         planning_frame = self.get_parameter("planning_frame").value
         q = source_pose.pose.orientation
         if math.isclose(q.x, 0.0) and math.isclose(q.y, 0.0) and math.isclose(q.z, 0.0) and math.isclose(q.w, 0.0):
             q.x, q.y, q.z, q.w = 0.0, 1.0, 0.0, 0.0
 
-        pick_approach = self._pose(planning_frame, x, y, float(self.get_parameter("pick_approach_z").value), q.x, q.y, q.z, q.w)
-        pick = self._pose(planning_frame, x, y, float(self.get_parameter("pick_z").value), q.x, q.y, q.z, q.w)
+        if pick_z is None:
+            pick_z = float(self.get_parameter("pick_z").value)
+        if pick_approach_z is None:
+            pick_approach_z = float(self.get_parameter("pick_approach_z").value)
+        pick_approach = self._pose(planning_frame, x, y, pick_approach_z, q.x, q.y, q.z, q.w)
+        pick = self._pose(planning_frame, x, y, pick_z, q.x, q.y, q.z, q.w)
         slot_place = make_pose_stamped(planning_frame, slot_pose_values)
         slot_approach = make_pose_stamped(
             planning_frame,
@@ -335,14 +393,20 @@ class ActionAdapterNode(Node):
         y: float,
         slot_pose_values: tuple[float, float, float, float, float, float, float],
         source_model: str | None,
+        pick_z: float | None = None,
+        pick_approach_z: float | None = None,
     ) -> tuple[bool, str]:
         if source_model is None:
             return False, "moveit_sim backend requires a Gazebo cube model name derived from object_id or frame_id."
 
         planning_frame = self.get_parameter("planning_frame").value
         qx, qy, qz, qw = self._moveit_grasp_orientation()
-        pick_approach = self._pose(planning_frame, x, y, float(self.get_parameter("pick_approach_z").value), qx, qy, qz, qw)
-        pick = self._pose(planning_frame, x, y, float(self.get_parameter("pick_z").value), qx, qy, qz, qw)
+        if pick_z is None:
+            pick_z = float(self.get_parameter("pick_z").value)
+        if pick_approach_z is None:
+            pick_approach_z = float(self.get_parameter("pick_approach_z").value)
+        pick_approach = self._pose(planning_frame, x, y, pick_approach_z, qx, qy, qz, qw)
+        pick = self._pose(planning_frame, x, y, pick_z, qx, qy, qz, qw)
         slot_place = make_pose_stamped(planning_frame, slot_pose_values)
         slot_approach = make_pose_stamped(
             planning_frame,
