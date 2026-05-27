@@ -83,10 +83,24 @@ sudo rosdep init || true
 rosdep update
 ```
 
-Install the Python packages:
+Install the Python packages. **Pin NumPy below 2.0** — ROS 2 Humble's
+`cv_bridge` and OpenCV were compiled against NumPy 1.x, so a newer NumPy
+breaks perception with `_ARRAY_API not found`:
 
 ```bash
-pip install ultralytics langchain langchain-openai
+pip install --user "numpy<2"
+pip install --user ultralytics langchain langchain-openai
+```
+
+If you already installed `ultralytics` and Gazebo's perception node dies
+with `numpy.core.multiarray failed to import`, just run the first line
+above (`pip install --user "numpy<2"`) and relaunch.
+
+Also make sure `pytest` is recent enough (the system 6.2 conflicts with
+the user-installed `anyio`):
+
+```bash
+pip install --user --upgrade "pytest>=7.4" pytest-asyncio
 ```
 
 ---
@@ -324,6 +338,24 @@ in this terminal. Source it again.
 ### Gazebo window does not open
 WSL needs WSLg. From PowerShell: `wsl --update`. Reboot Windows. Try
 `gazebo --version` in WSL — if it fails, reinstall: `sudo apt install --reinstall ros-humble-gazebo-ros-pkgs`.
+
+### `perception_node` dies with `_ARRAY_API not found` / `numpy.core.multiarray failed to import`
+
+Your user-level NumPy is 2.x but ROS Humble needs 1.x. Fix:
+
+```bash
+pip install --user "numpy<2"
+```
+
+Then Ctrl-C the launch and restart it.
+
+### `colcon test` fails with `ModuleNotFoundError: No module named '_pytest.scope'`
+
+System pytest is 6.2, the user-installed `anyio` plugin needs ≥ 7.0. Fix:
+
+```bash
+pip install --user --upgrade "pytest>=7.4" pytest-asyncio
+```
 
 ### YOLO model not found
 Check that `irb120pe_detection/yolov8/cubeDETECTION_Gz.pt` exists in
