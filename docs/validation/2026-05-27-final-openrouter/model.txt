@@ -1,0 +1,17 @@
+llm_provider: openrouter
+llm_model: anthropic/claude-3.5-sonnet
+openrouter_base_url: https://openrouter.ai/api/v1
+date: 2026-05-27
+commit: 549bf8a (HEAD before this evidence was added)
+instruction: |
+  Arrange the cubes in a line by color from white to black to blue along Y
+  at x=0.50, z=0.90, spacing=0.06, start=0.40
+notes: |
+  Real-LLM run. The LangChain agent backed by Claude 3.5 Sonnet over
+  OpenRouter received the natural-language instruction and emitted four
+  tool calls (one arrange_objects, three sequential move_object_to_pose),
+  visible in reasoning_trace.jsonl. Final plan and per-cube destination
+  match the mock-provider run because the prompt is unambiguous, but the
+  trace shows the LLM authored the call sequence (the reasoning node did
+  not invoke the deterministic arrangement_planner fallback when the
+  openrouter provider is active).

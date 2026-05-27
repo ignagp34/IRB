@@ -1,0 +1,5 @@
+black_1
+sticker_1
+sticker_2
+sticker_3
+sticker_4

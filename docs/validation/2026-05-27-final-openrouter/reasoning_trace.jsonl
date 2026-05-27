@@ -1,0 +1,8 @@
+data: '{"tool": "arrange_objects", "input": {"instruction": "Arrange the cubes in a line by color from white to black to blue along Y a...'
+---
+data: '{"tool": "move_object_to_pose", "input": {"object_id": "white_1", "label": "white", "color": "white", "target_pose": {"x": 0.5, ...'
+---
+data: '{"tool": "move_object_to_pose", "input": {"object_id": "black_1", "label": "black", "color": "black", "target_pose": {"x": 0.5, ...'
+---
+data: '{"tool": "move_object_to_pose", "input": {"object_id": "blue_1", "label": "blue", "color": "blue", "target_pose": {"x": 0.5, "y"...'
+---

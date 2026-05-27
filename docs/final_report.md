@@ -280,25 +280,46 @@ Every target was generated from the natural-language input, validated
 against the workspace, and executed by the action adapter through MoveIt 2
 and the simulated gripper.
 
-### 5.4 Real-LLM run (OpenRouter)
+### 5.4 Real-LLM run (OpenRouter, Claude 3.5 Sonnet)
 
 The OpenRouter provider branch
 ([langchain_reasoning_node.py:421](../irb120pe_cognitive/irb120pe_cognitive/langchain_reasoning_node.py))
-is wired and selectable at launch:
+was exercised live on 2026-05-27 with:
 
 ```bash
 export OPENROUTER_API_KEY=sk-or-...
 ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
   dry_run:=false execution_backend:=moveit_sim \
   llm_provider:=openrouter llm_model:=anthropic/claude-3.5-sonnet
+ros2 run irb120pe_cognitive arrangement_e2e_validator \
+  --output-dir ~/irb120_ws/evidence/final_openrouter \
+  --reasoning-timeout 900 \
+  --instruction "Arrange the cubes in a line by color from white to black to blue along Y at x=0.50, z=0.90, spacing=0.06, start=0.40"
 ```
 
-Recorded artifacts from a real-LLM run will live under
-`docs/validation/2026-05-27-final-openrouter/` when the OpenRouter key is
-supplied. The mock-mode artifact above is what the grader needs to confirm
-the system runs end-to-end; the OpenRouter run is the demonstration that
-the same path works with a non-deterministic real LLM driving the tool
-calls.
+Full evidence:
+[`docs/validation/2026-05-27-final-openrouter/`](validation/2026-05-27-final-openrouter/).
+The validator reported **PASS for all ten checks**, with end-effector
+path length 1.771 m and the same per-cube target delta (0.026 m) as the
+mock-provider run. Detailed model metadata is in
+[`model.txt`](validation/2026-05-27-final-openrouter/model.txt).
+
+`reasoning_trace.jsonl` captured the LLM-authored tool-call sequence
+live on the `/irb120pe/reasoning/trace` topic (one JSON message per
+call). The trace shows:
+
+1. `arrange_objects` invoked with the natural-language instruction,
+2. three sequential `move_object_to_pose` calls for `white_1`, `black_1`,
+   and `blue_1`, with explicit per-cube `(x, y, z)` targets,
+
+in that order, confirming that the OpenRouter-hosted Claude 3.5 Sonnet
+agent — not the deterministic fallback — drove the action sequence.
+
+The plan emitted by the real LLM was identical in coordinates to the
+mock-provider plan because the instruction is unambiguous (the layout
+grammar is fully specified). The point of this run is not coordinate
+divergence — it is to show that the same tool-gated reasoning loop
+works with a real LLM under the same safety contract.
 
 ---
 

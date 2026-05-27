@@ -1,0 +1,4 @@
+object_id label confidence x y z
+white_1 white 0.685 0.552 0.321 0.900 delta=0.020
+black_1 black 0.918 0.552 0.450 0.900 delta=0.020
+blue_1 blue 0.845 0.552 0.579 0.900 delta=0.020

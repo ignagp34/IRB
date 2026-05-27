@@ -1,0 +1,4 @@
+cube planned_x planned_y planned_z final_x final_y final_z delta
+WhiteCube 0.500 0.400 0.900 0.498 0.400 0.874 delta=0.026
+BlackCube 0.500 0.460 0.900 0.497 0.460 0.874 delta=0.026
+BlueCube 0.500 0.520 0.900 0.497 0.521 0.874 delta=0.026
