@@ -50,6 +50,13 @@ class ArrangementDemoClient(Node):
         )
 
     def wait_for_objects(self, expected_labels: Iterable[str], timeout_sec: float) -> bool:
+        """Wait until each expected label (or its color root) is seen by perception.
+
+        Perception emits "blue"/"black"/"white" while spawn entities are
+        "BlueCube"/"BlackCube"/"WhiteCube". We accept either direction of
+        substring match so the demo works with both naming styles.
+        """
+
         deadline = time.monotonic() + timeout_sec
         targets = {label.lower() for label in expected_labels}
         if not self.detected_objects_client.wait_for_service(timeout_sec=10.0):
@@ -59,7 +66,7 @@ class ArrangementDemoClient(Node):
             rclpy.spin_until_future_complete(self, future, timeout_sec=5.0)
             if future.result() is not None:
                 seen = {obj.label.lower() for obj in future.result().objects}
-                if targets.issubset(seen) or all(any(t in s for s in seen) for t in targets):
+                if all(any(t in s or s in t for s in seen) for t in targets):
                     return True
             time.sleep(1.0)
         return False

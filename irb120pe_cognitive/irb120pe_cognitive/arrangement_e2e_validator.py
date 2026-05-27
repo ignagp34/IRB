@@ -84,6 +84,7 @@ class Recorder:
     last_model_states: ModelStates | None = None
     last_joint_state: JointState | None = None
     lock: threading.Lock = field(default_factory=threading.Lock)
+    stop_recording: threading.Event = field(default_factory=threading.Event)
 
     def on_joint_state(self, message: JointState) -> None:
         with self.lock:
@@ -149,10 +150,11 @@ class ArrangementValidator(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
         self.create_subscription(JointState, "/joint_states", self.recorder.on_joint_state, 50, callback_group=self.cb_group)
+        # Both /gazebo/model_states and the ros2_grasp namespaced topic are
+        # tried so we still record cube positions if only one is available.
         self.create_subscription(ModelStates, "/gazebo/model_states", self.recorder.on_model_states, 50, callback_group=self.cb_group)
+        self.create_subscription(ModelStates, "/ros2_grasp/model_states", self.recorder.on_model_states, 50, callback_group=self.cb_group)
         self.create_timer(0.1, self._sample_tool0, callback_group=self.cb_group)
-
-        self.stop_recording = threading.Event()
 
     # ----------------------------------------------------------------- spawn
     def spawn_cube(self, cube_spec: dict, timeout_sec: float) -> tuple[bool, str]:
@@ -228,7 +230,7 @@ class ArrangementValidator(Node):
 
     # ----------------------------------------------------- internal helpers
     def _sample_tool0(self) -> None:
-        if self.stop_recording.is_set():
+        if self.recorder.stop_recording.is_set():
             return
         try:
             transform = self.tf_buffer.lookup_transform("world", "tool0", rclpy.time.Time())

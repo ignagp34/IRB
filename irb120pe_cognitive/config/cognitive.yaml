@@ -3,7 +3,10 @@
     use_sim_time: true
 
     planning_frame: world
-    camera_frame: camera
+    # The Gazebo camera plugin reports frame_id "camera" but no TF is published
+    # for that frame in this world. The URDF link the camera is mounted on is
+    # "camera_link", which has a valid world<->camera_link TF.
+    camera_frame: camera_link
     camera_topic: /camera/image_raw
     camera_info_topic: /camera/camera_info
     detections_2d_topic: /irb120pe/perception/detections_2d
