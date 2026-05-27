@@ -38,4 +38,34 @@ Simulation motion validation is handled separately by `moveit_motion_probe`, whi
 
 ## Provider Modes
 
-The default provider is `mock`, which makes the demo deterministic when API keys or local models are unavailable. OpenAI, Ollama, and Hugging Face endpoint support can be enabled through parameters and environment variables.
+The default provider is `mock`, which makes the demo deterministic when API keys or local models are unavailable. OpenAI, OpenRouter, Ollama, and Hugging Face endpoint support can be enabled through parameters and environment variables. OpenRouter is the recommended path for a real-LLM demo because it exposes Anthropic, OpenAI, and Google models behind a single OpenAI-API-compatible client (`base_url=https://openrouter.ai/api/v1`).
+
+## Goal-Oriented Arrangement Extension
+
+The headline RI_26 mission adds a *goal-oriented arrangement* flow on top of the
+single-pick `execute_instruction` service. The reasoning node accepts a
+natural-language layout instruction (e.g. *"arrange the cubes in a line by
+color from white to black to blue along Y at x=0.50, z=0.90, spacing=0.06"*),
+queries perception, plans per-cube destinations, validates every destination
+against the configured workspace, and drives the action adapter through a
+sequence of pick-and-place calls. The LLM thus produces target coordinates the
+deterministic code cannot derive on its own.
+
+New runtime surface:
+
+- Service `/irb120pe/reasoning/arrange_objects` (`irb120pe_cognitive_interfaces/srv/ArrangeObjects`) — entry point. Returns `plan_json` with the ordered `(object_id, target_pose)` plan.
+- Topic `/irb120pe/reasoning/trace` (`std_msgs/String`, JSON) — one message per LLM tool call. Lets a demo viewer watch the AI's reasoning live (`ros2 topic echo`).
+- Extended service `/irb120pe/action/pick_and_place` — `target_pose` is now optional. When populated, the action adapter treats it as the **cube destination**, validates it against `workspace_limits`, then converts the destination Z into a `tool0` waypoint using `place_z_offset_from_object` (default `0.18 m`). The direct `tool0` waypoint is independently validated against `tool0_workspace_limits`.
+
+The destination-vs-`tool0` distinction matters: an earlier bug sent the cube
+destination Z directly to MoveIt as a `tool0` goal, which produced
+`NO_IK_SOLUTION` during the place phase. The fix is described in
+`SESSION_LOG.md` and lives in `action_adapter_node.py` and `cognitive.yaml`.
+
+## Verification Layers
+
+Three layers of automated coverage:
+
+1. **Pure-Python unit tests** (no ROS) — workspace bounds, slot resolution, arrangement planner output, free-target-pose validation. Run with `colcon test --packages-select irb120pe_cognitive`.
+2. **ROS dry-run e2e** (`test/test_arrangement_e2e_dry_run.py`) — boots a `FakePerceptionNode` + `FakeActionAdapter` + the real `LangChainReasoningNode`, calls `/irb120pe/reasoning/arrange_objects`, asserts the returned plan and the per-step service calls.
+3. **Live runtime e2e** (`arrangement_e2e_validator`) — spawns cubes in Gazebo, records `tool0_trajectory.csv` and `cube_trajectory.csv`, checks final cube poses vs the LLM-generated targets, writes a single `summary.txt` PASS/FAIL artifact for grading.

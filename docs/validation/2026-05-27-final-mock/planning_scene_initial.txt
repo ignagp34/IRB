@@ -1,0 +1,6 @@
+black_1
+blue_1
+sticker_1
+sticker_2
+sticker_3
+white_1

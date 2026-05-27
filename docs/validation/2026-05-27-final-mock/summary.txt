@@ -1,0 +1,11 @@
+Arrangement E2E validation: PASS
+[PASS] spawn WhiteCube - SpawnEntity: Successfully spawned entity [WhiteCube]
+[PASS] spawn BlackCube - SpawnEntity: Successfully spawned entity [BlackCube]
+[PASS] spawn BlueCube - SpawnEntity: Successfully spawned entity [BlueCube]
+[PASS] perception matches spawn poses - tolerance=0.05 m
+[PASS] planning scene tracks cubes - ids=['black_1', 'blue_1', 'sticker_1', 'sticker_2', 'sticker_3', 'white_1']
+[PASS] arrange_objects success - Arrangement completed for 3 object(s).
+[PASS] target poses inside workspace - 3 step(s)
+[PASS] end-effector moved - path_length=1.777 m
+[PASS] cubes reached planned targets - tolerance=0.06 m
+[PASS] planning scene updated after arrangement - ids=['black_1', 'sticker_1', 'sticker_2', 'sticker_3', 'sticker_4']
