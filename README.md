@@ -335,8 +335,8 @@ Esta extension esta preparada para una demo **solo en Gazebo** con ROS 2 Humble,
 Workspace recomendado:
 
 ```bash
-mkdir -p /root/irb120_ws/src
-cd /root/irb120_ws/src
+mkdir -p ~/irb120_ws/src
+cd ~/irb120_ws/src
 ```
 
 Instala la base de ROS 2 Humble, MoveIt 2, Gazebo y herramientas de compilacion:
@@ -360,12 +360,12 @@ Instala dependencias Python usadas por percepcion y razonamiento:
 pip install ultralytics langchain langchain-openai langchain-ollama langchain-huggingface
 ```
 
-Clona o copia este repositorio en `/root/irb120_ws/src/irb120_PoseEstimation`. Asegura tambien las dependencias fuente usadas por el proyecto, especialmente `IFRA_LinkAttacher` y `ros2_SimRealRobotControl`, dentro de `/root/irb120_ws/src`.
+Clona o copia este repositorio en `~/irb120_ws/src/irb120_PoseEstimation`. Asegura tambien las dependencias fuente usadas por el proyecto, especialmente `IFRA_LinkAttacher` y `ros2_SimRealRobotControl`, dentro de `~/irb120_ws/src`.
 
 Compila la ruta validada saltando `ros2srrc_execution`:
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install --packages-skip ros2srrc_execution
 source install/setup.bash
@@ -385,7 +385,7 @@ Resultado validado actual: `28 tests, 0 errors, 0 failures`.
 1. Abre una terminal WSL y prepara el entorno:
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ```
@@ -401,7 +401,7 @@ ros2 launch irb120pe_cognitive cognitive_demo.launch.py \
 3. En otra terminal WSL, prepara el entorno de nuevo:
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ```

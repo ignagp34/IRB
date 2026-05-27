@@ -94,8 +94,9 @@ pip install ultralytics langchain langchain-openai
 ## Step 3 — Get the source code
 
 ```bash
-mkdir -p /root/irb120_ws/src
-cd /root/irb120_ws/src
+cd ~
+mkdir -p irb120_ws/src
+cd irb120_ws/src
 
 # Main repository (this project)
 git clone -b humble https://github.com/ignagp34/IRB.git irb120_PoseEstimation
@@ -108,12 +109,33 @@ git clone https://github.com/IFRA-Cranfield/ros2_SimRealRobotControl.git
 If the clone of this project fails, double-check the URL (it should be the
 fork you pushed to: `ignagp34/IRB`).
 
+### If git asks for credentials (private repo)
+
+GitHub no longer accepts passwords over HTTPS. You need a **Personal Access
+Token** (PAT):
+
+1. GitHub → **Settings → Developer settings → Personal access tokens →
+   Tokens (classic) → Generate new token (classic)**.
+2. Scope: tick `repo` (and only that, unless you know you need more).
+3. Copy the token **once**. Treat it like a password — never paste it into
+   docs, commits, or chat. If it leaks, **revoke it immediately** from the
+   same page.
+4. When git asks for a password, paste the token. Cache it for the session:
+
+```bash
+git config --global credential.helper "cache --timeout=3600"
+```
+
+> Public repos (like `IFRA-Cranfield/...`) do **not** require a PAT — no
+> credentials needed at all. You only need one if you're cloning a private
+> fork or pushing changes back.
+
 ---
 
 ## Step 4 — Build the workspace
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 
 # Resolve missing system deps
@@ -141,7 +163,7 @@ Expected end of output: `Summary: N packages finished` with no failures.
 ## Step 5 — Run the unit tests (fast sanity check, no Gazebo needed)
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source install/setup.bash
 colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
 colcon test-result --verbose
@@ -156,7 +178,7 @@ You want to see `0 errors, 0 failures`.
 This is the **Terminal A** command. Keep it running.
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source install/setup.bash
 ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
   dry_run:=false llm_provider:=mock execution_backend:=moveit_sim
@@ -178,7 +200,7 @@ Leave this terminal running for everything that follows.
 Open **Terminal B** in WSL:
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source install/setup.bash
 ros2 topic echo /irb120pe/reasoning/trace
 ```
@@ -192,7 +214,7 @@ Each LLM tool call publishes a JSON message here. Leave it streaming.
 Open **Terminal C** in WSL:
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source install/setup.bash
 ros2 run irb120pe_cognitive arrangement_demo
 ```
@@ -216,7 +238,7 @@ You should see the cubes line up along the Y axis in Gazebo.
 Still in **Terminal C** (Terminal A must still be running):
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source install/setup.bash
 ros2 run irb120pe_cognitive arrangement_e2e_validator \
   --output-dir ./evidence/arrangement

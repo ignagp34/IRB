@@ -151,7 +151,7 @@ deterministic CI and recorded demos.
 ## Build & test commands (WSL Ubuntu 22.04, ROS 2 Humble)
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 # Always rebuild interfaces first when .srv files change.
 colcon build --symlink-install --packages-select irb120pe_cognitive_interfaces

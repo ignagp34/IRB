@@ -15,7 +15,7 @@ The normal presentation should start in `dry_run:=true` and `llm_provider:=mock`
 ## 3. Baseline Gazebo And MoveIt
 
 ```bash
-cd /root/irb120_ws
+cd ~/irb120_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 launch irb120pe_moveit2 moveit2.launch.py \
@@ -66,7 +66,7 @@ First capture readiness:
 
 ```bash
 ros2 run irb120pe_cognitive motion_readiness_validator \
-  --output-dir /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/demo-motion-probe/readiness
+  --output-dir ~/irb120_ws/src/irb120_PoseEstimation/docs/validation/demo-motion-probe/readiness
 ```
 
 Then execute the reversible simulation probe:
@@ -74,7 +74,7 @@ Then execute the reversible simulation probe:
 ```bash
 ros2 run irb120pe_cognitive moveit_motion_probe \
   --execute --return-to-start \
-  --output-dir /root/irb120_ws/src/irb120_PoseEstimation/docs/validation/demo-motion-probe/probe
+  --output-dir ~/irb120_ws/src/irb120_PoseEstimation/docs/validation/demo-motion-probe/probe
 ```
 
 Expected validated behavior: `joint_6` moves about `0.02` rad and returns close to the original joint state.
