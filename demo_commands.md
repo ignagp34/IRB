@@ -119,6 +119,54 @@ Expected validated status: `moveit_sim pick-and-place completed for BlueCube.`
 
 For the full rerun checklist and evidence files, see `docs/gazebo_pick_place_moveit_sim.md`.
 
-## 10. Limitations And Conclusions
+## 10. Goal-Oriented Arrangement (RI_26 Cognitive Mission)
+
+This is the headline LLM-driven demo. The reasoning node parses a natural-language goal and emits explicit per-cube target poses; the deterministic code cannot produce them on its own.
+
+```bash
+ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
+  dry_run:=false llm_provider:=mock execution_backend:=moveit_sim
+```
+
+In a second terminal, watch the LLM tool calls live:
+
+```bash
+ros2 topic echo /irb120pe/reasoning/trace
+```
+
+Then trigger the arrangement (spawns three cubes and calls the service):
+
+```bash
+ros2 run irb120pe_cognitive arrangement_demo
+```
+
+Or call the service directly with a custom instruction:
+
+```bash
+ros2 service call /irb120pe/reasoning/arrange_objects \
+  irb120pe_cognitive_interfaces/srv/ArrangeObjects \
+  "{instruction: 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06'}"
+```
+
+Use OpenRouter for a real LLM run:
+
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+pip install langchain-openai
+ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
+  llm_provider:=openrouter llm_model:=anthropic/claude-3.5-sonnet
+```
+
+## 11. Live End-to-End Validation (Evidence For Grading)
+
+Records perception accuracy, planning-scene sync, end-effector trajectory, and final cube positions vs the planned targets; writes a PASS/FAIL `summary.txt`.
+
+```bash
+ros2 run irb120pe_cognitive arrangement_e2e_validator \
+  --output-dir ./evidence/arrangement
+cat ./evidence/arrangement/summary.txt
+```
+
+## 12. Limitations And Conclusions
 
 Discuss YOLO class limitations, workspace bounds, model/provider availability, the validated MoveIt-native simulation probe, and the validated Gazebo-only cognitive pick/place path. The old `/Robmove` and `/Move` blocker is no longer a blocker for the master's demo because the project uses the MoveIt-native simulation backend.

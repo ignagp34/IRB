@@ -11,6 +11,8 @@
     move_arm_service: /irb120pe/action/move_arm
     pick_and_place_service: /irb120pe/action/pick_and_place
     execute_instruction_service: /irb120pe/reasoning/execute_instruction
+    arrange_objects_service: /irb120pe/reasoning/arrange_objects
+    reasoning_trace_topic: /irb120pe/reasoning/trace
     execution_backend: legacy
 
     yolo_model_path: ""
@@ -48,6 +50,19 @@
     llm_model: gpt-4o-mini
     ollama_base_url: http://localhost:11434
     huggingface_endpoint_url: ""
+    openrouter_base_url: "https://openrouter.ai/api/v1"
+    openrouter_referer: ""
+    openrouter_app_title: "IRB-120 Cognitive Cell"
+
+    arrangement_grasp_orientation: [0.707, 0.707, 0.0, 0.0]
+    arrangement_defaults:
+      table_top_z: 1.00
+      line_x: 0.55
+      line_y: 0.40
+      line_y_start: 0.30
+      line_x_start: 0.30
+      tower_x: 0.55
+      tower_y: 0.52
 
     workspace_limits:
       x: [0.05, 0.75]

@@ -578,11 +578,76 @@ ros2 launch irb120pe_cognitive reasoning.launch.py llm_provider:=openai
 
 # Ollama
 ros2 launch irb120pe_cognitive reasoning.launch.py llm_provider:=ollama llm_model:=llama3.1
+
+# OpenRouter (recommended for the demo video)
+export OPENROUTER_API_KEY=sk-or-...
+pip install langchain-openai
+ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
+  llm_provider:=openrouter llm_model:=anthropic/claude-3.5-sonnet
 ```
+
+OpenRouter is OpenAI-API-compatible, so the same `langchain-openai` client is reused with a custom `base_url`. Recommended models:
+
+- `anthropic/claude-3.5-sonnet` — strongest structured tool-use; first choice for the live demo.
+- `openai/gpt-4o-mini` — cheaper alternative with reliable tool-use.
+- `google/gemini-2.0-flash-exp:free` — free tier for development experiments.
+
+The default in `cognitive.yaml` stays `llm_provider: mock` so tests and recorded demos remain deterministic; OpenRouter is opt-in via the launch arg + environment variable.
 
 ## Safety
 
 Movement tools validate numeric coordinates, configured workspace bounds, valid slots, and available detected objects. Unsafe, incomplete, ambiguous, or unsupported commands are rejected with explicit errors. Red cube commands are unsupported until the simulation assets and YOLO model include a red class.
+
+## Goal-Oriented Arrangement Demo (RI_26 Cognitive Mission)
+
+This is the headline demo for the RI_26 final project. The LLM is not optional: it receives a natural-language instruction like *"Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06"*, queries perception, and emits per-cube target poses (coordinates the deterministic code cannot derive on its own). Each pose is validated against the safe workspace before MoveIt executes it.
+
+New ROS interfaces:
+
+- Service `/irb120pe/reasoning/arrange_objects` (`irb120pe_cognitive_interfaces/srv/ArrangeObjects`) — top-level entry point. Returns `plan_json` with the ordered (object, target_pose) plan.
+- Topic `/irb120pe/reasoning/trace` (`std_msgs/String`, JSON) — one message per LLM tool call. Watch live during the demo with `ros2 topic echo /irb120pe/reasoning/trace`.
+- Extended service `/irb120pe/action/pick_and_place` now honors an optional `target_pose` field, which the LangChain `move_object_to_pose_tool` populates.
+
+### Launch the full stack
+
+```bash
+ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
+  dry_run:=false llm_provider:=mock execution_backend:=moveit_sim
+```
+
+### Trigger the mission
+
+The deterministic demo script spawns the three cubes and calls the new service:
+
+```bash
+ros2 run irb120pe_cognitive arrangement_demo
+# or with a custom instruction:
+ros2 run irb120pe_cognitive arrangement_demo \
+  --instruction "Build a tower at x=0.55, y=0.52, z=1.00"
+```
+
+### Live end-to-end validation (runtime evidence)
+
+The validator below runs against a live launched stack, spawns cubes, calls the reasoning service, records the end-effector and cube trajectories, then verifies the cubes ended within tolerance of the LLM-generated targets. Every artifact is written to `./evidence/arrangement/`.
+
+```bash
+ros2 run irb120pe_cognitive arrangement_e2e_validator \
+  --output-dir ./evidence/arrangement
+cat ./evidence/arrangement/summary.txt   # must be PASS
+```
+
+Produced evidence files:
+
+- `spawn_<Cube>.txt` — Gazebo spawn responses
+- `detections_initial.txt` — perception output with measured xyz and delta vs spawn pose
+- `planning_scene_initial.txt` — collision object IDs in MoveIt at start
+- `plan_json.txt` — the LLM's ordered arrangement plan
+- `reasoning_response.txt` — service success + status
+- `tool0_trajectory.csv` — end-effector pose over time (from TF)
+- `cube_trajectory.csv` — every cube's position over time (from `/gazebo/model_states`)
+- `final_state.txt` — final cube poses vs planned targets and per-cube delta
+- `planning_scene_final.txt` — collision objects after the arrangement
+- `summary.txt` — PASS/FAIL per check (the single artifact the grader needs)
 
 ## Tests
 
@@ -592,7 +657,11 @@ colcon test --packages-select irb120pe_cognitive irb120pe_cognitive_interfaces
 colcon test-result --verbose
 ```
 
-The lightweight tests cover workspace bounds, slot validation, object selection, and structured tool payloads.
+Three layers of automated coverage:
+
+1. **Unit tests** (pure Python, no ROS): workspace bounds, slot resolution, object selection, and the new arrangement planner (`test_arrangement_planner.py`, `test_target_pose_validation.py`).
+2. **ROS dry-run e2e** (`test/test_arrangement_e2e_dry_run.py`): boots a `FakePerceptionNode` + `FakeActionAdapter` + the real `LangChainReasoningNode`, calls `/irb120pe/reasoning/arrange_objects`, asserts the returned plan and the per-step service calls.
+3. **Live runtime e2e** — see *Live end-to-end validation* above; this is the deliverable that exercises perception, planning scene, MoveIt, gripper, and the LLM together and writes per-check PASS/FAIL evidence.
 
 ## Troubleshooting
 

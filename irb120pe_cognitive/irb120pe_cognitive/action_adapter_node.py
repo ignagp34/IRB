@@ -195,25 +195,48 @@ class ActionAdapterNode(Node):
             source_pose = request.source_pose
             if not self._pose_has_position(source_pose):
                 source_pose = self._lookup_source_pose(request.object_id)
-            slot = resolve_slot(request.target_slot, self.slots)
+
+            # Free target_pose overrides target_slot when populated. This is the path
+            # used by the arrangement reasoning tool — the LLM picks the coordinates.
+            target_pose_values: tuple[float, float, float, float, float, float, float]
+            target_label: str
+            if self._pose_has_position(request.target_pose):
+                tx, ty, tz = validate_coordinates(
+                    request.target_pose.pose.position.x,
+                    request.target_pose.pose.position.y,
+                    request.target_pose.pose.position.z,
+                    self.workspace_limits,
+                )
+                tq = request.target_pose.pose.orientation
+                if math.isclose(tq.x, 0.0) and math.isclose(tq.y, 0.0) and math.isclose(tq.z, 0.0) and math.isclose(tq.w, 0.0):
+                    qx, qy, qz, qw = self._moveit_grasp_orientation()
+                else:
+                    qx, qy, qz, qw = tq.x, tq.y, tq.z, tq.w
+                target_pose_values = (tx, ty, tz, qx, qy, qz, qw)
+                target_label = f"free_pose({tx:.3f},{ty:.3f},{tz:.3f})"
+            else:
+                slot = resolve_slot(request.target_slot, self.slots)
+                validate_coordinates(slot.pose[0], slot.pose[1], slot.pose[2], self.workspace_limits)
+                target_pose_values = slot.pose
+                target_label = slot.key
+
             x, y, _ = validate_coordinates(
                 source_pose.pose.position.x,
                 source_pose.pose.position.y,
                 float(self.get_parameter("pick_z").value),
                 self.workspace_limits,
             )
-            validate_coordinates(slot.pose[0], slot.pose[1], slot.pose[2], self.workspace_limits)
 
             if self.dry_run:
                 response.success = True
-                response.status = f"dry_run: would pick {request.object_id or 'source pose'} and place into {slot.key}."
+                response.status = f"dry_run: would pick {request.object_id or 'source pose'} and place into {target_label}."
                 return response
 
             source_model = self._gazebo_model_name(request.object_id, source_pose)
             if self.execution_backend == "moveit_sim" and request.object_id:
                 extra_ids = [str(value) for value in self.get_parameter("moveit_extra_collision_object_ids").value]
                 self._moveit_sim_collision_objects_to_remove = [request.object_id, *extra_ids]
-            ok, status = self._execute_pick_and_place(x, y, source_pose, slot.pose, source_model)
+            ok, status = self._execute_pick_and_place(x, y, source_pose, target_pose_values, source_model)
             response.success = ok
             response.status = status
         except Exception as exc:

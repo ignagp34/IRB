@@ -12,6 +12,7 @@ find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/DetectedObject.msg"
+  "srv/ArrangeObjects.srv"
   "srv/ExecuteInstruction.srv"
   "srv/GetDetectedObjects.srv"
   "srv/MoveArm.srv"

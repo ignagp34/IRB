@@ -1,6 +1,7 @@
 string object_id
 geometry_msgs/PoseStamped source_pose
 string target_slot
+geometry_msgs/PoseStamped target_pose
 ---
 bool success
 string status

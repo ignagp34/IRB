@@ -13,6 +13,7 @@ setup(
         (
             f"share/{package_name}/launch",
             [
+                "launch/cognitive_arrangement_demo.launch.py",
                 "launch/cognitive_demo.launch.py",
                 "launch/cognitive_perception.launch.py",
                 "launch/planning_scene.launch.py",
@@ -37,6 +38,8 @@ setup(
             "live_cube_validator = irb120pe_cognitive.live_cube_validator:main",
             "motion_readiness_validator = irb120pe_cognitive.motion_readiness_validator:main",
             "moveit_motion_probe = irb120pe_cognitive.moveit_motion_probe:main",
+            "arrangement_demo = irb120pe_cognitive.arrangement_demo:main",
+            "arrangement_e2e_validator = irb120pe_cognitive.arrangement_e2e_validator:main",
         ],
     },
 )
