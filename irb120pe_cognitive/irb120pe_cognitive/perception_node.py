@@ -10,6 +10,7 @@ from cv_bridge import CvBridge
 from geometry_msgs.msg import PoseStamped
 from rclpy.duration import Duration
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 from rclpy.time import Time
 from sensor_msgs.msg import CameraInfo, Image
 from tf2_ros import Buffer, TransformListener
@@ -48,8 +49,10 @@ class CognitivePerceptionNode(Node):
             self.get_parameter("detections_2d_topic").value,
             10,
         )
-        self.create_subscription(Image, self.get_parameter("camera_topic").value, self._image_cb, 10)
-        self.create_subscription(CameraInfo, self.get_parameter("camera_info_topic").value, self._camera_info_cb, 10)
+        # SensorDataQoS so we receive Gazebo's camera publisher regardless of its
+        # reliability/durability settings (different Gazebo versions vary).
+        self.create_subscription(Image, self.get_parameter("camera_topic").value, self._image_cb, qos_profile_sensor_data)
+        self.create_subscription(CameraInfo, self.get_parameter("camera_info_topic").value, self._camera_info_cb, qos_profile_sensor_data)
         self.create_service(GetDetectedObjects, self.get_parameter("detected_objects_service").value, self._get_objects_cb)
         self.create_timer(float(self.get_parameter("detection_period_sec").value), self._detect_once)
 
@@ -79,6 +82,10 @@ class CognitivePerceptionNode(Node):
         self.latest_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
 
     def _camera_info_cb(self, msg: CameraInfo) -> None:
+        if self.camera_info is None:
+            self.get_logger().info(
+                f"camera_info received: frame_id={msg.header.frame_id} fx={msg.k[0]:.1f} fy={msg.k[4]:.1f}"
+            )
         self.camera_info = msg
 
     def _get_objects_cb(self, _request: GetDetectedObjects.Request, response: GetDetectedObjects.Response) -> GetDetectedObjects.Response:
@@ -172,9 +179,10 @@ class CognitivePerceptionNode(Node):
                 self.get_parameter("planning_frame").value,
                 self.get_parameter("camera_frame").value,
                 Time(),
-                timeout=Duration(seconds=0.05),
+                timeout=Duration(seconds=1.0),
             )
-        except Exception:
+        except Exception as exc:
+            self.get_logger().warn(f"TF lookup failed: {exc}", throttle_duration_sec=5.0)
             return None
 
         fx = float(self.camera_info.k[0])
@@ -184,7 +192,10 @@ class CognitivePerceptionNode(Node):
         if fx == 0.0 or fy == 0.0:
             return None
 
-        ray_camera = ((u - cx) / fx, (v - cy) / fy, 1.0)
+        # Image-plane ray (u-cx)/fx, (v-cy)/fy, 1 is in OPTICAL convention
+        # (X right, Y down, Z forward). The IRB-120 URDF uses camera_link with
+        # X-forward / Y-left / Z-up. Convert before rotating into world.
+        ray_camera = (1.0, -(u - cx) / fx, -(v - cy) / fy)
         origin = (
             transform.transform.translation.x,
             transform.transform.translation.y,

@@ -26,7 +26,7 @@
     table_height_m: 0.88
     pick_approach_z: 1.10
     pick_z: 1.07
-    place_approach_offset_z: 0.031
+    place_approach_offset_z: 0.10
 
     moveit_group_name: irb120_arm
     moveit_end_effector_link: tool0
