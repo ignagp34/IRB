@@ -14,7 +14,7 @@ decisions before reading the code.
 A ROS 2 (Humble) sorting cell where an LLM (LangChain) actually drives the
 behavior — it reads YOLOv8 detections, reasons about a natural-language goal
 (e.g. *"arrange the cubes in a line by color from white to black to blue along
-Y at x=0.55, z=1.00"*), emits per-cube **target poses**, and executes
+Y at x=0.55, z=0.90"*), emits per-cube **target poses**, and executes
 pick-and-place via MoveIt 2 in Gazebo. The deterministic code cannot produce
 those target poses on its own — the LLM is mandatory, not decorative.
 
@@ -110,10 +110,14 @@ deterministic CI and recorded demos.
 - **Python**: 3.10+ syntax allowed (`X | None`). No comments unless the *why*
   is non-obvious. Don't paraphrase what code already says.
 - **Workspace limits** live in `irb120pe_cognitive/config/cognitive.yaml`
-  (`workspace_limits.{x,y,z}` and `slots.*`). Never hardcode bounds in nodes —
-  read them via `ros_helpers.get_workspace_limits`.
+  (`workspace_limits.{x,y,z}`, `tool0_workspace_limits.{x,y,z}`, and
+  `slots.*`). Cube destinations use `workspace_limits`; direct MoveIt/tool0
+  waypoints use `tool0_workspace_limits`.
 - **Frame**: planning frame is `world`; end-effector link is `tool0`; grasp
   orientation default is `(0.707, 0.707, 0, 0)`.
+- **Target pose semantics**: arrangement and slot poses are cube destinations.
+  The action adapter converts destination Z to a `tool0` waypoint with
+  `place_z_offset_from_object`.
 - **Gripper attach**: `moveit_sim` backend uses IFRA `/ATTACHLINK` and
   `/DETACHLINK` for the cube; do not add a custom attach mechanism.
 - **Reasoning trace**: every tool call is published as JSON to

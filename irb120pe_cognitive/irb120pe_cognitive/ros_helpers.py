@@ -4,7 +4,7 @@ from typing import Any
 
 from geometry_msgs.msg import PoseStamped
 
-from .defaults import DEFAULT_SLOTS, DEFAULT_WORKSPACE_LIMITS
+from .defaults import DEFAULT_SLOTS, DEFAULT_TOOL0_WORKSPACE_LIMITS, DEFAULT_WORKSPACE_LIMITS
 from .validation import Slot, load_slots, load_workspace_limits
 
 
@@ -13,6 +13,9 @@ def declare_common_parameters(node: Any) -> None:
     node.declare_parameter("workspace_limits.x", list(DEFAULT_WORKSPACE_LIMITS["x"]))
     node.declare_parameter("workspace_limits.y", list(DEFAULT_WORKSPACE_LIMITS["y"]))
     node.declare_parameter("workspace_limits.z", list(DEFAULT_WORKSPACE_LIMITS["z"]))
+    node.declare_parameter("tool0_workspace_limits.x", list(DEFAULT_TOOL0_WORKSPACE_LIMITS["x"]))
+    node.declare_parameter("tool0_workspace_limits.y", list(DEFAULT_TOOL0_WORKSPACE_LIMITS["y"]))
+    node.declare_parameter("tool0_workspace_limits.z", list(DEFAULT_TOOL0_WORKSPACE_LIMITS["z"]))
     for slot_key, slot in DEFAULT_SLOTS.items():
         node.declare_parameter(f"slots.{slot_key}.label", slot["label"])
         node.declare_parameter(f"slots.{slot_key}.aliases", slot["aliases"])
@@ -22,6 +25,14 @@ def declare_common_parameters(node: Any) -> None:
 def get_workspace_limits(node: Any) -> dict[str, tuple[float, float]]:
     raw = {
         axis: node.get_parameter(f"workspace_limits.{axis}").value
+        for axis in ("x", "y", "z")
+    }
+    return load_workspace_limits(raw)
+
+
+def get_tool0_workspace_limits(node: Any) -> dict[str, tuple[float, float]]:
+    raw = {
+        axis: node.get_parameter(f"tool0_workspace_limits.{axis}").value
         for axis in ("x", "y", "z")
     }
     return load_workspace_limits(raw)

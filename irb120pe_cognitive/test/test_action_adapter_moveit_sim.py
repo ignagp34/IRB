@@ -5,6 +5,7 @@ from shape_msgs.msg import SolidPrimitive
 from irb120pe_cognitive.action_adapter_node import (
     build_move_group_pose_goal,
     compute_pick_heights,
+    compute_place_heights,
     normalize_execution_backend,
 )
 from irb120pe_cognitive.validation import ValidationError
@@ -66,6 +67,16 @@ def test_compute_pick_heights_falls_back_without_valid_detection_height():
     )
     assert pick_z == pytest.approx(1.07)
     assert approach_z == pytest.approx(1.10)
+
+
+def test_compute_place_heights_converts_object_target_to_tool0_goals():
+    place_z, approach_z = compute_place_heights(
+        0.90,
+        place_z_offset_from_object=0.18,
+        place_approach_offset_z=0.10,
+    )
+    assert place_z == pytest.approx(1.08)
+    assert approach_z == pytest.approx(1.18)
 
 
 def test_build_move_group_pose_goal_uses_pose_constraints_for_tool0():

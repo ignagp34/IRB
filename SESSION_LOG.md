@@ -18,6 +18,43 @@ final publishing pass, Codex could access the Windows checkout but WSL was not
 exposed in that app context, so the live ROS/Gazebo results below are recorded
 results from that session rather than a fresh rerun.
 
+## Continuation Update - 2026-05-27
+
+A subsequent Codex session reached the live `Ubuntu-22.04` WSL environment,
+rebuilt the hand-off baseline, and reproduced the place descent failure at
+both `z=1.00` and `z=1.05`.
+
+Root cause: arrangement and slot `target_pose` values represent cube
+destinations, but the action adapter passed their Z coordinate directly to
+MoveIt as a `tool0` goal. The low tool goal caused `NO_IK_SOLUTION`, and the
+validator could also start a partial arrangement when sticker detections were
+counted as cubes.
+
+Implemented fix:
+
+- Convert destination cube Z to the `tool0` place goal using
+  `place_z_offset_from_object:=0.18`; source pick calibration remains
+  independently set to `pick_z_offset_from_object:=0.17`.
+- Keep cube-destination bounds in `workspace_limits` and protect direct
+  end-effector commands with separate `tool0_workspace_limits`.
+- Use tabletop cube destination `z=0.90` for the line demo and named slots.
+- Require white, black, and blue detections and their planning-scene IDs
+  before the live validator commands motion.
+
+Fresh live validation result:
+
+```text
+Summary: 47 tests, 0 errors, 0 failures, 0 skipped
+Arrangement E2E validation: PASS
+[PASS] arrange_objects success - Arrangement completed for 3 object(s).
+[PASS] end-effector moved - path_length=1.777 m
+[PASS] cubes reached planned targets - tolerance=0.06 m
+```
+
+Evidence is in `~/irb120_ws/evidence/arrangement_fixed018_z090_20260527_run2/`.
+Use `z=0.90` in the headline line-arrangement instruction; the older
+`z=1.00`/`z=1.05` place-IK workaround notes below are superseded.
+
 ---
 
 ## TL;DR
@@ -32,7 +69,7 @@ The live WSL session took the project from "compiled but never run" to:
 - MoveIt actually executes — arm picks up, attaches, and lifts cubes
   (recorded ~1.5 m of end-effector motion in one run)
 
-**Outstanding**: the place phase intermittently fails on IK or Gazebo's
+**Earlier outstanding diagnosis (resolved above)**: the place phase intermittently fails on IK or Gazebo's
 LinkAttacher destabilises after a few attach/detach cycles. The
 cognitive layer is solid; this is a Gazebo/plugin tuning problem.
 
@@ -105,7 +142,7 @@ for this. Don't try to subtract the offset.
 ```
 ros2 service call /irb120pe/reasoning/arrange_objects \
   irb120pe_cognitive_interfaces/srv/ArrangeObjects \
-  "{instruction: 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.50, z=1.00, spacing=0.06, start=0.40'}"
+  "{instruction: 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.50, z=0.90, spacing=0.06, start=0.40'}"
 # Returns 3 ordered (object_id, target_pose) steps inside workspace_limits.
 ```
 
@@ -116,13 +153,11 @@ approach place slot all completed. `tool0_trajectory.csv` recorded
 
 ---
 
-## What still fails intermittently
+## Pre-Fix Failures (Historical; Resolved Above)
 
-1. **Place IK** — `error_code=-31` (NO_IK_SOLUTION) when descending to the
-   place pose while holding a cube. The source-height fix preserves the
-   calibrated table pick behavior and tracks elevated detections; it does not
-   by itself prove that the place IK issue is resolved. If place still fails,
-   raise the arrangement's `z=1.00` to `z=1.05` in the instruction.
+1. **Place IK** — `error_code=-31` (NO_IK_SOLUTION) occurred when descending
+   to a cube target that had been passed directly as a `tool0` pose. The
+   destination-to-tool offset fix above resolves this in the passing line demo.
 2. **Gazebo / LinkAttacher SIGABRT** — `gzserver` exit `-6` after a few
    attach/detach cycles. Pre-existing IFRA plugin instability. Workarounds:
    - Restart the full stack between arrangement runs.
@@ -159,16 +194,17 @@ rm -rf evidence/arrangement
 ros2 run irb120pe_cognitive arrangement_e2e_validator \
   --output-dir ./evidence/arrangement \
   --reasoning-timeout 600 \
-  --instruction 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.50, z=1.00, spacing=0.06, start=0.40'
+  --instruction 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.50, z=0.90, spacing=0.06, start=0.40'
 cat ./evidence/arrangement/summary.txt
 ```
 
-If `summary.txt` still has FAIL on `arrange_objects success`, the next
-debug actions are:
+The following were pre-fix experiments retained for provenance, not current
+instructions:
 
-1. Try `z=1.05` instead of `z=1.00` in the instruction (more clearance).
-2. Try `start=0.45` instead of `0.40` (further from robot base for IK).
-3. Try a single cube first via:
+1. `z=1.05` instead of `z=1.00` was tested and still failed at place descent.
+2. A position-shift experiment (`start=0.45`) was no longer needed after the
+   target-pose conversion bug was fixed.
+3. The single-cube sanity check remains useful:
    ```bash
    ros2 service call /irb120pe/reasoning/execute_instruction \
      irb120pe_cognitive_interfaces/srv/ExecuteInstruction \

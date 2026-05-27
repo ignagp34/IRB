@@ -23,7 +23,7 @@ def _objects():
 
 def test_planner_targets_pass_workspace_validation():
     steps = build_arrangement_plan(
-        "Line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06",
+        "Line by color from white to black to blue along Y at x=0.55, z=0.90, spacing=0.06",
         _objects(),
     )
     for step in steps:
@@ -53,7 +53,7 @@ def test_planner_prefers_highest_confidence_per_color():
         {"object_id": "white_1", "label": "WhiteCube", "confidence": 0.70},
     ]
     steps = build_arrangement_plan(
-        "Line by color from white to black to blue along Y at x=0.55, z=1.00",
+        "Line by color from white to black to blue along Y at x=0.55, z=0.90",
         objects,
     )
     blue_step = next(step for step in steps if step.color == "blue")

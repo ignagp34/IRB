@@ -600,13 +600,13 @@ Movement tools validate numeric coordinates, configured workspace bounds, valid 
 
 ## Goal-Oriented Arrangement Demo (RI_26 Cognitive Mission)
 
-This is the headline demo for the RI_26 final project. The LLM is not optional: it receives a natural-language instruction like *"Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06"*, queries perception, and emits per-cube target poses (coordinates the deterministic code cannot derive on its own). Each pose is validated against the safe workspace before MoveIt executes it.
+This is the headline demo for the RI_26 final project. The LLM is not optional: it receives a natural-language instruction like *"Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=0.90, spacing=0.06"*, queries perception, and emits per-cube target poses (coordinates the deterministic code cannot derive on its own). Each pose is validated against the safe workspace before MoveIt executes it.
 
 New ROS interfaces:
 
 - Service `/irb120pe/reasoning/arrange_objects` (`irb120pe_cognitive_interfaces/srv/ArrangeObjects`) — top-level entry point. Returns `plan_json` with the ordered (object, target_pose) plan.
 - Topic `/irb120pe/reasoning/trace` (`std_msgs/String`, JSON) — one message per LLM tool call. Watch live during the demo with `ros2 topic echo /irb120pe/reasoning/trace`.
-- Extended service `/irb120pe/action/pick_and_place` now honors an optional `target_pose` field, which the LangChain `move_object_to_pose_tool` populates.
+- Extended service `/irb120pe/action/pick_and_place` now honors an optional `target_pose` field, which the LangChain `move_object_to_pose_tool` populates. `target_pose` and slot poses describe the cube destination; the action adapter adds the calibrated `tool0` placement offset and separately validates the tool waypoint.
 
 ### Launch the full stack
 
@@ -623,7 +623,7 @@ The deterministic demo script spawns the three cubes and calls the new service:
 ros2 run irb120pe_cognitive arrangement_demo
 # or with a custom instruction:
 ros2 run irb120pe_cognitive arrangement_demo \
-  --instruction "Build a tower at x=0.55, y=0.52, z=1.00"
+  --instruction "Build a tower at x=0.55, y=0.52, z=0.90"
 ```
 
 ### Live end-to-end validation (runtime evidence)

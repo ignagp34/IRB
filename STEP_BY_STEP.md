@@ -246,7 +246,7 @@ What will happen:
 2. The perception node detects them.
 3. The reasoning node receives the canonical instruction
    *"arrange the cubes in a line by color from white to black to blue along Y
-   at x=0.55, z=1.00, spacing=0.06"*.
+   at x=0.55, z=0.90, spacing=0.06"*.
 4. The arm picks each cube and places it at the LLM-generated coordinates.
 5. The script prints the JSON plan and exits with `arrangement success: True`.
 
@@ -400,6 +400,10 @@ near `z=0.861`, not on the floor. Do not subtract that height from world-frame
 poses. The action adapter calculates source goals from detected object Z plus
 the configured `tool0`-to-gripper offsets (`pick_z_offset_from_object` and
 `pick_approach_offset_from_object`).
+
+Arrangement and named-slot `target_pose` values are cube destinations, not
+`tool0` goals. A tabletop line uses `z=0.90`; the adapter adds
+`place_z_offset_from_object` before asking MoveIt to descend.
 
 ### Cube doesn't drop in the slot (gripper missed)
 The `summary.txt` will mark `cubes reached planned targets` as FAIL.

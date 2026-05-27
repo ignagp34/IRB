@@ -33,6 +33,7 @@ try:
     from geometry_msgs.msg import PoseStamped
     from std_msgs.msg import String
 
+    from irb120pe_cognitive.arrangement_e2e_validator import _required_detections
     from irb120pe_cognitive.langchain_reasoning_node import LangChainReasoningNode
 except Exception as exc:  # pragma: no cover - skip when ROS env missing
     pytest.skip(f"ROS 2 runtime not available: {exc}", allow_module_level=True)
@@ -43,6 +44,23 @@ CUBES = (
     ("black_1", "BlackCube", 0.55, 0.45, 0.88),
     ("blue_1", "BlueCube", 0.55, 0.58, 0.88),
 )
+
+
+def _detected(label: str) -> DetectedObject:
+    obj = DetectedObject()
+    obj.label = label
+    obj.confidence = 0.9
+    return obj
+
+
+def test_required_detections_do_not_count_stickers_as_cubes():
+    matches = _required_detections([_detected("white"), _detected("black"), _detected("sticker")])
+    assert set(matches) == {"WhiteCube", "BlackCube"}
+
+
+def test_required_detections_accept_all_expected_colours():
+    matches = _required_detections([_detected("white"), _detected("black"), _detected("blue")])
+    assert set(matches) == {"WhiteCube", "BlackCube", "BlueCube"}
 
 
 class FakePerceptionNode(Node):
@@ -152,7 +170,7 @@ def test_arrange_objects_service_returns_three_step_plan(stack):
         )
 
         request = ArrangeObjects.Request()
-        request.instruction = "Arrange in a line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06"
+        request.instruction = "Arrange in a line by color from white to black to blue along Y at x=0.55, z=0.90, spacing=0.06"
         future = client.call_async(request)
 
         deadline = time.monotonic() + 30.0
@@ -171,7 +189,7 @@ def test_arrange_objects_service_returns_three_step_plan(stack):
             pose = step["target_pose"]
             assert 0.05 <= pose["x"] <= 0.75
             assert 0.05 <= pose["y"] <= 0.85
-            assert 0.95 <= pose["z"] <= 1.65
+            assert 0.85 <= pose["z"] <= 1.65
 
         # Action adapter must have received exactly three pick-and-place calls.
         assert len(action_adapter.pick_calls) == 3

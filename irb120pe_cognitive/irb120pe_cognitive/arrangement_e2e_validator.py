@@ -49,11 +49,12 @@ from irb120pe_cognitive_interfaces.srv import ArrangeObjects, GetDetectedObjects
 
 from .arrangement_planner import euclidean_distance
 from .gazebo_cube_helper import expanded_cube_xml
+from .validation import ValidationError, validate_coordinates
 
 
 DEFAULT_INSTRUCTION = (
     "Arrange the cubes in a line by color from white to black to blue "
-    "along Y at x=0.55, z=1.00, spacing=0.06"
+    "along Y at x=0.55, z=0.90, spacing=0.06"
 )
 
 DEFAULT_CUBES = (
@@ -289,6 +290,16 @@ def _matching_detection(objects: Iterable, cube_label: str):
     return best
 
 
+def _required_detections(objects: Iterable) -> dict[str, object]:
+    object_list = list(objects)
+    matches: dict[str, object] = {}
+    for cube in DEFAULT_CUBES:
+        match = _matching_detection(object_list, cube["cube"])
+        if match is not None:
+            matches[cube["name"]] = match
+    return matches
+
+
 def run(args: argparse.Namespace) -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -318,7 +329,7 @@ def run(args: argparse.Namespace) -> int:
         detected = None
         while time.monotonic() < deadline:
             detected = node.get_detected_objects(timeout_sec=5.0)
-            if detected is not None and len(detected.objects) >= len(DEFAULT_CUBES):
+            if detected is not None and len(_required_detections(detected.objects)) == len(DEFAULT_CUBES):
                 break
             time.sleep(1.0)
         det_lines = ["object_id label confidence x y z"]
@@ -341,11 +352,24 @@ def run(args: argparse.Namespace) -> int:
                 det_check_ok = False
         _write(output_dir, "detections_initial.txt", "\n".join(det_lines))
         results.append(CheckResult("perception matches spawn poses", det_check_ok, f"tolerance={DETECTION_TOLERANCE_M} m"))
+        if not det_check_ok:
+            _write(output_dir, "summary.txt", _format_summary(results))
+            return 2
 
         # Step 3 — planning scene -------------------------------------------------
-        scene_ids = node.get_planning_scene_ids(timeout_sec=args.service_timeout)
+        expected_scene_ids = {
+            obj.object_id
+            for obj in _required_detections(detected.objects).values()
+        }
+        scene_ids: list[str] = []
+        scene_deadline = time.monotonic() + args.service_timeout
+        while time.monotonic() < scene_deadline:
+            scene_ids = node.get_planning_scene_ids(timeout_sec=args.service_timeout)
+            if expected_scene_ids.issubset(set(scene_ids)):
+                break
+            time.sleep(0.5)
         _write(output_dir, "planning_scene_initial.txt", "\n".join(scene_ids) or "<empty>")
-        scene_ok = bool(scene_ids) and len(scene_ids) >= len(DEFAULT_CUBES)
+        scene_ok = expected_scene_ids.issubset(set(scene_ids))
         results.append(CheckResult("planning scene tracks cubes", scene_ok, f"ids={scene_ids}"))
 
         # Step 4 — arrangement reasoning ----------------------------------------
@@ -367,11 +391,13 @@ def run(args: argparse.Namespace) -> int:
             plan = json.loads(arrange_response.plan_json or "[]")
         except json.JSONDecodeError:
             plan = []
-        plan_ok = bool(plan)
+        plan_ok = len(plan) == len(DEFAULT_CUBES)
         for step in plan:
             target = step.get("target_pose", {})
             x, y, z = float(target.get("x", 0.0)), float(target.get("y", 0.0)), float(target.get("z", 0.0))
-            if not (0.05 <= x <= 0.75 and 0.05 <= y <= 0.85 and 0.95 <= z <= 1.65):
+            try:
+                validate_coordinates(x, y, z)
+            except ValidationError:
                 plan_ok = False
         results.append(CheckResult("target poses inside workspace", plan_ok, f"{len(plan)} step(s)"))
 
@@ -382,8 +408,14 @@ def run(args: argparse.Namespace) -> int:
         results.append(CheckResult("end-effector moved", path_ok, f"path_length={path_length:.3f} m"))
 
         final_lines = ["cube planned_x planned_y planned_z final_x final_y final_z delta"]
-        final_ok = True
-        for step, cube in zip(plan, DEFAULT_CUBES):
+        cube_by_color = {cube["cube"].removesuffix("Cube").lower(): cube for cube in DEFAULT_CUBES}
+        final_ok = len(plan) == len(DEFAULT_CUBES)
+        for step in plan:
+            cube = cube_by_color.get(str(step.get("color", "")).lower())
+            if cube is None:
+                final_lines.append(f"UNKNOWN_COLOR {step.get('color', '')}")
+                final_ok = False
+                continue
             target = step.get("target_pose", {})
             planned = (float(target.get("x", 0.0)), float(target.get("y", 0.0)), float(target.get("z", 0.0)))
             final = node.get_entity_pose(cube["name"], timeout_sec=args.service_timeout)

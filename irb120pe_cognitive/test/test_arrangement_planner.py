@@ -22,12 +22,12 @@ def _objects():
 
 
 def test_parse_layout_recognises_line_along_y():
-    spec = parse_layout("Arrange cubes in a line by color from white to black to blue along Y at x=0.55, z=1.00")
+    spec = parse_layout("Arrange cubes in a line by color from white to black to blue along Y at x=0.55, z=0.90")
     assert spec.kind == "line"
     assert spec.axis == "y"
     assert spec.color_order == ("white", "black", "blue")
     assert spec.fixed["x"] == pytest.approx(0.55)
-    assert spec.fixed["z"] == pytest.approx(1.00)
+    assert spec.fixed["z"] == pytest.approx(0.90)
 
 
 def test_parse_layout_recognises_tower():
@@ -39,13 +39,13 @@ def test_parse_layout_recognises_tower():
 
 def test_build_plan_produces_ordered_targets_inside_workspace():
     steps = build_arrangement_plan(
-        "Line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06",
+        "Line by color from white to black to blue along Y at x=0.55, z=0.90, spacing=0.06",
         _objects(),
     )
     assert [s.color for s in steps] == ["white", "black", "blue"]
     # x and z constant, y monotonically increasing
     assert all(s.target_pose[0] == pytest.approx(0.55) for s in steps)
-    assert all(s.target_pose[2] == pytest.approx(1.00) for s in steps)
+    assert all(s.target_pose[2] == pytest.approx(0.90) for s in steps)
     ys = [s.target_pose[1] for s in steps]
     assert ys == sorted(ys)
     # grasp orientation defaults applied
@@ -83,7 +83,7 @@ def test_plan_as_json_payload_is_serialisable():
     import json
 
     steps = build_arrangement_plan(
-        "Line by color along Y at x=0.55, z=1.00, spacing=0.06",
+        "Line by color along Y at x=0.55, z=0.90, spacing=0.06",
         _objects(),
     )
     payload = plan_as_json_payload(steps)

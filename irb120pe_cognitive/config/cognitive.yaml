@@ -29,6 +29,8 @@
     # tool0 is above the physical gripper; retain that offset when detection z changes.
     pick_z_offset_from_object: 0.17
     pick_approach_offset_from_object: 0.20
+    # Arrangement and slot targets are object poses; convert them to tool0 goals.
+    place_z_offset_from_object: 0.18
     place_approach_offset_z: 0.10
 
     moveit_group_name: irb120_arm
@@ -62,7 +64,7 @@
 
     arrangement_grasp_orientation: [0.707, 0.707, 0.0, 0.0]
     arrangement_defaults:
-      table_top_z: 1.00
+      table_top_z: 0.90
       line_x: 0.55
       line_y: 0.40
       line_y_start: 0.30
@@ -73,22 +75,27 @@
     workspace_limits:
       x: [0.05, 0.75]
       y: [0.05, 0.85]
+      z: [0.85, 1.65]
+
+    tool0_workspace_limits:
+      x: [0.05, 0.75]
+      y: [0.05, 0.85]
       z: [0.95, 1.65]
 
     slots:
       slot_a:
         label: white_slot
         aliases: [slot_a, white_slot, left_container]
-        pose: [0.105, 0.100, 1.08, 0.707, 0.707, 0.0, 0.0]
+        pose: [0.105, 0.100, 0.90, 0.707, 0.707, 0.0, 0.0]
       slot_b:
         label: black_slot
         aliases: [slot_b, black_slot]
-        pose: [0.105, 0.145, 1.08, 0.707, 0.707, 0.0, 0.0]
+        pose: [0.105, 0.145, 0.90, 0.707, 0.707, 0.0, 0.0]
       slot_c:
         label: blue_slot
         aliases: [slot_c, blue_slot, right_container]
-        pose: [0.150, 0.145, 1.08, 0.707, 0.707, 0.0, 0.0]
+        pose: [0.150, 0.145, 0.90, 0.707, 0.707, 0.0, 0.0]
       unknown_slot:
         label: unknown_slot
         aliases: [unknown_slot, no_detection_slot]
-        pose: [0.150, 0.100, 1.08, 0.707, 0.707, 0.0, 0.0]
+        pose: [0.150, 0.100, 0.90, 0.707, 0.707, 0.0, 0.0]

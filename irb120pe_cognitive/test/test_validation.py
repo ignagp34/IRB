@@ -14,6 +14,10 @@ def test_validate_coordinates_accepts_safe_workspace_point():
     assert validate_coordinates(0.2, 0.2, 1.1) == (0.2, 0.2, 1.1)
 
 
+def test_validate_coordinates_accepts_tabletop_object_pose():
+    assert validate_coordinates(0.2, 0.2, 0.90) == (0.2, 0.2, 0.90)
+
+
 def test_validate_coordinates_rejects_out_of_bounds_z():
     with pytest.raises(ValidationError, match="outside the safe workspace"):
         validate_coordinates(0.2, 0.2, 0.2)

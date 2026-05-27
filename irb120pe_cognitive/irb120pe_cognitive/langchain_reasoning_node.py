@@ -25,7 +25,7 @@ from .arrangement_planner import (
     build_arrangement_plan,
     plan_as_json_payload,
 )
-from .ros_helpers import declare_common_parameters, get_slots, get_workspace_limits, pose_to_dict
+from .ros_helpers import declare_common_parameters, get_slots, get_tool0_workspace_limits, get_workspace_limits, pose_to_dict
 from .validation import (
     ValidationError,
     resolve_slot,
@@ -50,10 +50,10 @@ Tools you may call (and ONLY these tools):
 - `pick_and_place_tool(object_id, target_slot)` — pick an existing object and
   place it into one of the named slots.
 - `move_object_to_pose_tool(object_id, x, y, z, qx?, qy?, qz?, qw?)` — pick
-  an existing object and place it at an explicit coordinate. Coordinates that
+  an existing object and place its cube pose at an explicit coordinate. Coordinates that
   fall outside the safe workspace are rejected by the action layer.
 - `arrange_objects_tool(instruction)` — delegate a multi-cube arrangement
-  request (e.g. "line by color along Y at x=0.55, z=1.00") to the planner.
+  request (e.g. "line by color along Y at x=0.55, z=0.90") to the planner.
 
 Rules:
 1. Never invent object IDs or slot names. Read them from the tools first.
@@ -65,11 +65,11 @@ Rules:
 Worked example
 ==============
 User: "Arrange the cubes in a line by color from white to blue along Y at
-x=0.55, z=1.00."
+x=0.55, z=0.90."
 Assistant plan:
 1. Call `get_detected_objects()`.
 2. Call `arrange_objects_tool(instruction="line by color from white to blue
-   along Y at x=0.55, z=1.00")`.
+   along Y at x=0.55, z=0.90")`.
 3. Inspect the returned plan and report success/failure.
 """
 
@@ -93,7 +93,7 @@ class LangChainReasoningNode(Node):
         self.declare_parameter("execute_instruction_service", "/irb120pe/reasoning/execute_instruction")
         self.declare_parameter("arrange_objects_service", "/irb120pe/reasoning/arrange_objects")
         self.declare_parameter("reasoning_trace_topic", "/irb120pe/reasoning/trace")
-        self.declare_parameter("arrangement_defaults.table_top_z", 1.00)
+        self.declare_parameter("arrangement_defaults.table_top_z", 0.90)
         self.declare_parameter("arrangement_defaults.line_x", 0.55)
         self.declare_parameter("arrangement_defaults.line_y", 0.40)
         self.declare_parameter("arrangement_defaults.line_y_start", 0.30)
@@ -103,6 +103,7 @@ class LangChainReasoningNode(Node):
         self.declare_parameter("arrangement_grasp_orientation", [0.707, 0.707, 0.0, 0.0])
 
         self.workspace_limits = get_workspace_limits(self)
+        self.tool0_workspace_limits = get_tool0_workspace_limits(self)
         self.slots = get_slots(self)
         self.cb_group = ReentrantCallbackGroup()
         self.detected_objects_client = self.create_client(
@@ -163,7 +164,7 @@ class LangChainReasoningNode(Node):
 
     def tool_move_arm(self, x: Any, y: Any, z: Any, qx: float = 0.0, qy: float = 1.0, qz: float = 0.0, qw: float = 0.0) -> dict[str, Any]:
         """Motion tool: validates explicit target coordinates before calling MoveIt."""
-        x, y, z = validate_coordinates(x, y, z, self.workspace_limits)
+        x, y, z = validate_coordinates(x, y, z, self.tool0_workspace_limits)
         request = MoveArm.Request()
         request.motion_type = "PTP"
         request.speed = 0.2
@@ -390,7 +391,7 @@ class LangChainReasoningNode(Node):
                 ),
                 name="move_object_to_pose_tool",
                 description=(
-                    "Pick an existing object_id and place it at an explicit (x, y, z) coordinate in the world frame. "
+                    "Pick an existing object_id and place its cube pose at an explicit (x, y, z) coordinate in the world frame. "
                     "Coordinates outside the safe workspace are rejected."
                 ),
             ),

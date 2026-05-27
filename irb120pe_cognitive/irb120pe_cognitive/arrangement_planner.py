@@ -5,7 +5,7 @@ unit-tested without a running ROS stack and reused by both the mock provider
 and the LangChain tool implementations.
 
 The planner converts a natural-language instruction such as
-``"arrange the cubes in a line by color along Y at x=0.55, z=0.88"`` into an
+``"arrange the cubes in a line by color along Y at x=0.55, z=0.90"`` into an
 ordered list of target poses for the detected cubes. Every generated pose is
 validated against the cognitive workspace limits before being returned.
 """
@@ -149,7 +149,7 @@ def parse_layout(instruction: str, *, defaults: Mapping[str, Any] | None = None)
     if "tower" in text or "stack" in text:
         anchor_x = _extract_axis_value(text, "x") or float(defaults.get("tower_x", 0.55))
         anchor_y = _extract_axis_value(text, "y") or float(defaults.get("tower_y", 0.52))
-        anchor_z = _extract_axis_value(text, "z") or float(defaults.get("table_top_z", 1.00))
+        anchor_z = _extract_axis_value(text, "z") or float(defaults.get("table_top_z", 0.90))
         return LayoutSpec(
             kind="tower",
             axis="z",
@@ -173,7 +173,7 @@ def parse_layout(instruction: str, *, defaults: Mapping[str, Any] | None = None)
     if fixed_axes.get("y") is None and axis != "y":
         fixed_axes["y"] = float(defaults.get("line_y", 0.40))
     if fixed_axes.get("z") is None:
-        fixed_axes["z"] = float(defaults.get("table_top_z", 1.00))
+        fixed_axes["z"] = float(defaults.get("table_top_z", 0.90))
 
     fixed = {axis_name: float(value) for axis_name, value in fixed_axes.items() if value is not None}
     spacing = _extract_spacing(text)
@@ -206,7 +206,7 @@ def _line_target(spec: LayoutSpec, index: int) -> tuple[float, float, float]:
 
 
 def _tower_target(spec: LayoutSpec, index: int) -> tuple[float, float, float]:
-    anchor = spec.anchor or (spec.fixed["x"], spec.fixed["y"], 1.00)
+    anchor = spec.anchor or (spec.fixed["x"], spec.fixed["y"], 0.90)
     return anchor[0], anchor[1], anchor[2] + index * spec.spacing
 
 

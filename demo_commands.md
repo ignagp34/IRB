@@ -121,7 +121,7 @@ For the full rerun checklist and evidence files, see `docs/gazebo_pick_place_mov
 
 ## 10. Goal-Oriented Arrangement (RI_26 Cognitive Mission)
 
-This is the headline LLM-driven demo. The reasoning node parses a natural-language goal and emits explicit per-cube target poses; the deterministic code cannot produce them on its own.
+This is the headline LLM-driven demo. The reasoning node parses a natural-language goal and emits explicit per-cube destination poses; the adapter converts each cube destination to a calibrated `tool0` placement waypoint.
 
 ```bash
 ros2 launch irb120pe_cognitive cognitive_arrangement_demo.launch.py \
@@ -145,7 +145,7 @@ Or call the service directly with a custom instruction:
 ```bash
 ros2 service call /irb120pe/reasoning/arrange_objects \
   irb120pe_cognitive_interfaces/srv/ArrangeObjects \
-  "{instruction: 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=1.00, spacing=0.06'}"
+  "{instruction: 'Arrange the cubes in a line by color from white to black to blue along Y at x=0.55, z=0.90, spacing=0.06'}"
 ```
 
 Use OpenRouter for a real LLM run:

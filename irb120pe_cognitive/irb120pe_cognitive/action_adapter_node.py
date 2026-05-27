@@ -20,7 +20,7 @@ from linkattacher_msgs.srv import AttachLink, DetachLink
 from ros2srrc_data.action import Move, Robmove
 from ros2srrc_data.msg import Action
 
-from .ros_helpers import declare_common_parameters, get_slots, get_workspace_limits, make_pose_stamped
+from .ros_helpers import declare_common_parameters, get_slots, get_tool0_workspace_limits, get_workspace_limits, make_pose_stamped
 from .validation import ValidationError, resolve_slot, select_object, validate_coordinates
 
 
@@ -51,6 +51,17 @@ def compute_pick_heights(
         perceived_z + pick_z_offset_from_object,
         perceived_z + pick_approach_offset_from_object,
     )
+
+
+def compute_place_heights(
+    target_object_z: float,
+    *,
+    place_z_offset_from_object: float,
+    place_approach_offset_z: float,
+) -> tuple[float, float]:
+    """Convert a desired object height to tool0 place and approach goals."""
+    place_z = target_object_z + place_z_offset_from_object
+    return place_z, place_z + place_approach_offset_z
 
 
 def build_move_group_pose_goal(
@@ -127,6 +138,7 @@ class ActionAdapterNode(Node):
         self.declare_parameter("pick_z", 1.07)
         self.declare_parameter("pick_z_offset_from_object", 0.17)
         self.declare_parameter("pick_approach_offset_from_object", 0.20)
+        self.declare_parameter("place_z_offset_from_object", 0.18)
         self.declare_parameter("place_approach_offset_z", 0.031)
         self.declare_parameter("execution_backend", "legacy")
         self.declare_parameter("moveit_group_name", "irb120_arm")
@@ -150,6 +162,7 @@ class ActionAdapterNode(Node):
         self.declare_parameter("robot_attach_link", "EE_egp64")
 
         self.workspace_limits = get_workspace_limits(self)
+        self.tool0_workspace_limits = get_tool0_workspace_limits(self)
         self.slots = get_slots(self)
         self.dry_run = bool(self.get_parameter("dry_run").value)
         self.execution_backend = normalize_execution_backend(self.get_parameter("execution_backend").value)
@@ -188,7 +201,7 @@ class ActionAdapterNode(Node):
                 request.target_pose.pose.position.x,
                 request.target_pose.pose.position.y,
                 request.target_pose.pose.position.z,
-                self.workspace_limits,
+                self.tool0_workspace_limits,
             )
             motion_type = (request.motion_type or "PTP").upper()
             if motion_type not in {"PTP", "LIN"}:
@@ -217,7 +230,7 @@ class ActionAdapterNode(Node):
 
             # Free target_pose overrides target_slot when populated. This is the path
             # used by the arrangement reasoning tool — the LLM picks the coordinates.
-            target_pose_values: tuple[float, float, float, float, float, float, float]
+            target_object_pose_values: tuple[float, float, float, float, float, float, float]
             target_label: str
             if self._pose_has_position(request.target_pose):
                 tx, ty, tz = validate_coordinates(
@@ -231,13 +244,35 @@ class ActionAdapterNode(Node):
                     qx, qy, qz, qw = self._moveit_grasp_orientation()
                 else:
                     qx, qy, qz, qw = tq.x, tq.y, tq.z, tq.w
-                target_pose_values = (tx, ty, tz, qx, qy, qz, qw)
+                target_object_pose_values = (tx, ty, tz, qx, qy, qz, qw)
                 target_label = f"free_pose({tx:.3f},{ty:.3f},{tz:.3f})"
             else:
                 slot = resolve_slot(request.target_slot, self.slots)
                 validate_coordinates(slot.pose[0], slot.pose[1], slot.pose[2], self.workspace_limits)
-                target_pose_values = slot.pose
+                target_object_pose_values = slot.pose
                 target_label = slot.key
+
+            place_z, place_approach_z = compute_place_heights(
+                target_object_pose_values[2],
+                place_z_offset_from_object=float(self.get_parameter("place_z_offset_from_object").value),
+                place_approach_offset_z=float(self.get_parameter("place_approach_offset_z").value),
+            )
+            tx, ty, place_z_validated = validate_coordinates(
+                target_object_pose_values[0],
+                target_object_pose_values[1],
+                place_z,
+                self.tool0_workspace_limits,
+            )
+            _, _, _ = validate_coordinates(tx, ty, place_approach_z, self.tool0_workspace_limits)
+            target_pose_values = (
+                tx,
+                ty,
+                place_z_validated,
+                target_object_pose_values[3],
+                target_object_pose_values[4],
+                target_object_pose_values[5],
+                target_object_pose_values[6],
+            )
 
             perceived_z = float(source_pose.pose.position.z)
             pick_z, pick_approach_z = compute_pick_heights(
@@ -252,13 +287,13 @@ class ActionAdapterNode(Node):
                 source_pose.pose.position.x,
                 source_pose.pose.position.y,
                 pick_z,
-                self.workspace_limits,
+                self.tool0_workspace_limits,
             )
             _, _, pick_approach_z_validated = validate_coordinates(
                 x,
                 y,
                 pick_approach_z,
-                self.workspace_limits,
+                self.tool0_workspace_limits,
             )
 
             if self.dry_run:

@@ -27,7 +27,7 @@ from .gazebo_cube_helper import GazeboCubeClient
 
 DEFAULT_INSTRUCTION = (
     "Arrange the cubes in a line by color from white to black to blue "
-    "along Y at x=0.55, z=1.00, spacing=0.06"
+    "along Y at x=0.55, z=0.90, spacing=0.06"
 )
 
 DEFAULT_CUBES = (
