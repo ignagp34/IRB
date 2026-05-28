@@ -40,6 +40,7 @@ setup(
             "moveit_motion_probe = irb120pe_cognitive.moveit_motion_probe:main",
             "arrangement_demo = irb120pe_cognitive.arrangement_demo:main",
             "arrangement_e2e_validator = irb120pe_cognitive.arrangement_e2e_validator:main",
+            "chat_client = irb120pe_cognitive.chat_client:main",
         ],
     },
 )
