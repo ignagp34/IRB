@@ -19,7 +19,7 @@
     execution_backend: legacy
 
     yolo_model_path: ""
-    yolo_confidence: 0.3
+    yolo_confidence: 0.5
     detection_period_sec: 0.5
     object_stale_after_sec: 3.0
     cube_size_m: 0.035
@@ -32,6 +32,11 @@
     # Arrangement and slot targets are object poses; convert them to tool0 goals.
     place_z_offset_from_object: 0.18
     place_approach_offset_z: 0.10
+    # Altura (tool0) a la que se transporta el cubo en horizontal para librar a los vecinos.
+    moveit_transit_z: 1.30
+    # Holgura (m) sobre el destino al soltar: el cubo cae y se asienta en vez de
+    # empotrarse en lo que tenga debajo (clave al apilar). Subir si al apilar rebota.
+    place_release_clearance: 0.005
 
     moveit_group_name: irb120_arm
     moveit_end_effector_link: tool0
@@ -43,7 +48,7 @@
     moveit_position_tolerance: 0.01
     moveit_orientation_tolerance: 0.25
     moveit_grasp_orientation: [0.707, 0.707, 0.0, 0.0]
-    moveit_extra_collision_object_ids: [sticker_1, sticker_2, sticker_3, sticker_4, cube_1, cube_2, cube_3]
+    moveit_extra_collision_object_ids: [sticker_1, sticker_2, sticker_3]
     moveit_use_gripper_controllers: true
     gripper_left_action: /egp64_finger_left_controller/gripper_cmd
     gripper_right_action: /egp64_finger_right_controller/gripper_cmd
@@ -56,6 +61,9 @@
     dry_run: false
     llm_provider: mock
     llm_model: gpt-4o-mini
+    # Tope de tokens de salida por respuesta. Evita que OpenRouter reserve el maximo
+    # del modelo (p.ej. 64000) y rechace por saldo insuficiente (error 402).
+    llm_max_tokens: 1500
     ollama_base_url: http://localhost:11434
     huggingface_endpoint_url: ""
     openrouter_base_url: "https://openrouter.ai/api/v1"

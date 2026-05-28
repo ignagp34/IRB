@@ -66,7 +66,8 @@ langchain_reasoning_node  ──(MoveArm / PickAndPlace / ArrangeObjects)──�
 | `ros2 launch irb120pe_cognitive cognitive_demo.launch.py` | Older single-cube demo (still works). |
 | `ros2 run irb120pe_cognitive arrangement_demo` | Spawns three cubes and calls `/irb120pe/reasoning/arrange_objects`. |
 | `ros2 run irb120pe_cognitive arrangement_e2e_validator --output-dir ./evidence/arrangement` | **Live runtime verification** — produces `summary.txt` (PASS/FAIL) plus CSV trajectories. |
-| `ros2 run irb120pe_cognitive gazebo_cube_helper spawn --cube BlueCube ...` | Manual cube spawn for ad-hoc tests. |
+| `ros2 run irb120pe_cognitive gazebo_cube_helper spawn --cube BlueCube ...` | Manual cube spawn for ad-hoc tests. Use canonical `--name BlueCube/BlackCube/WhiteCube` (see runtime notes). |
+| `ros2 run irb120pe_cognitive chat_client` | **Interactive natural-language chat** (Spanish) → `ExecuteInstruction` service. Drives the arm by typing orders. |
 | `ros2 topic echo /irb120pe/reasoning/trace` | Watch LLM tool calls live during the demo. |
 
 ---
@@ -99,9 +100,39 @@ deterministic CI and recorded demos.
 |---|---|---|
 | `mock` | — | Deterministic; uses the same `arrangement_planner` the tools use. |
 | `openai` | `OPENAI_API_KEY` | `langchain-openai` |
-| `openrouter` | `OPENROUTER_API_KEY` | **Recommended for the video demo.** Uses `langchain-openai` against `https://openrouter.ai/api/v1`. Best model: `anthropic/claude-3.5-sonnet`. |
+| `openrouter` | `OPENROUTER_API_KEY` | **Recommended for the video demo.** Uses `langchain-openai` against `https://openrouter.ai/api/v1`. Model: `anthropic/claude-sonnet-4.5` (the old `claude-3.5-sonnet` slug is retired). Requires `langchain<1` — see *Live-demo runtime notes*. |
 | `ollama` | — | Local; `langchain-ollama` |
 | `huggingface` | `HUGGINGFACE_ENDPOINT_URL` | `langchain-huggingface` |
+
+---
+
+## Live-demo runtime notes (hard-won, 2026-05-28)
+
+These bit us during a live OpenRouter run. Honor them before touching the demo path:
+
+- **LangChain must be pinned `<1`.** The reasoning node uses the classic
+  `langchain.agents.initialize_agent` / `AgentType` API that LangChain 1.x removed.
+  Unpinned `pip install langchain ...` pulls 1.x and fails with a misleading
+  *"LangChain is not installed"*. Install `langchain<1 langchain-openai<1`.
+- **OpenRouter:** model `anthropic/claude-sonnet-4.5`. The node sets `llm_max_tokens`
+  (default 1500); without a cap the client reserves the model's full 64000-token
+  output and OpenRouter rejects low balances with **HTTP 402**.
+- **Spawn cubes with canonical names** `BlueCube`/`BlackCube`/`WhiteCube` (the
+  `gazebo_cube_helper` default). `/ATTACHLINK` asks Gazebo for the model named after
+  the cube colour, so a custom `--name blue_1` makes attach fail (*model not found*).
+  Perception still labels detections `blue_1` etc. — that decoupling is expected.
+- **Grasp order is attach-then-close** (not close-then-attach): bonding the cube at the
+  clean grasp pose before the fingers squeeze prevents the physics jolt that used to
+  "teleport"/displace the cube and ruin downstream placement.
+- **Placement/stacking params** in `cognitive.yaml`: `moveit_transit_z` (carry height,
+  clears neighbour cubes when traversing), `place_release_clearance` (drop the cube a
+  hair so it settles by gravity instead of being driven into what's below — essential
+  for stacking), `yolo_confidence: 0.5` (high threshold rejects duplicate/noise
+  detections; lowering it spawns phantom `*_2` objects).
+- **Chat memory:** the reasoning node keeps `conversation_history_turns` (default 6) of
+  context, so references like "yes, put it on the right" resolve across turns.
+- **Stickers** (`sticker_1..3`) are YOLO-detected table markers added to the MoveIt
+  planning scene as collision obstacles via `moveit_extra_collision_object_ids`.
 
 ---
 

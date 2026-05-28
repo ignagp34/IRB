@@ -140,6 +140,8 @@ class ActionAdapterNode(Node):
         self.declare_parameter("pick_approach_offset_from_object", 0.20)
         self.declare_parameter("place_z_offset_from_object", 0.18)
         self.declare_parameter("place_approach_offset_z", 0.031)
+        self.declare_parameter("moveit_transit_z", 1.30)
+        self.declare_parameter("place_release_clearance", 0.02)
         self.declare_parameter("execution_backend", "legacy")
         self.declare_parameter("moveit_group_name", "irb120_arm")
         self.declare_parameter("moveit_end_effector_link", "tool0")
@@ -442,7 +444,6 @@ class ActionAdapterNode(Node):
             pick_approach_z = float(self.get_parameter("pick_approach_z").value)
         pick_approach = self._pose(planning_frame, x, y, pick_approach_z, qx, qy, qz, qw)
         pick = self._pose(planning_frame, x, y, pick_z, qx, qy, qz, qw)
-        slot_place = make_pose_stamped(planning_frame, slot_pose_values)
         slot_approach = make_pose_stamped(
             planning_frame,
             (
@@ -455,19 +456,43 @@ class ActionAdapterNode(Node):
                 slot_pose_values[6],
             ),
         )
+        # Carry the cube horizontally above all obstacles so the gripper does not
+        # graze neighbouring cubes when traversing between source and slot.
+        transit_z = float(self.get_parameter("moveit_transit_z").value)
+        transit_over_source = self._pose(planning_frame, x, y, transit_z, qx, qy, qz, qw)
+        transit_over_slot = self._pose(planning_frame, slot_pose_values[0], slot_pose_values[1], transit_z, qx, qy, qz, qw)
+        # Release the cube a touch above the target so the fingers do not drive it
+        # into whatever is below (e.g. the cube under it when stacking). It settles
+        # by gravity instead of being pushed in and ejected by the physics solver.
+        release_clearance = float(self.get_parameter("place_release_clearance").value)
+        slot_release = make_pose_stamped(
+            planning_frame,
+            (
+                slot_pose_values[0],
+                slot_pose_values[1],
+                slot_pose_values[2] + release_clearance,
+                slot_pose_values[3],
+                slot_pose_values[4],
+                slot_pose_values[5],
+                slot_pose_values[6],
+            ),
+        )
 
         steps = [
             ("approach source", lambda: self._send_moveit_pose(pick_approach)),
             ("descend to grasp", lambda: self._send_moveit_pose(pick)),
+            # Bond the cube at the clean grasp pose BEFORE closing the fingers, so the
+            # finger-squeeze jolt cannot displace it (the rigid joint already holds it).
+            ("attach cube", lambda: self._attach(source_model)),
         ]
         if bool(self.get_parameter("moveit_use_gripper_controllers").value):
             steps.append(("close gripper", lambda: self._send_gripper_trajectory(float(self.get_parameter("gripper_closed_position").value))))
         steps.extend(
             [
-                ("attach cube", lambda: self._attach(source_model)),
-                ("lift cube", lambda: self._send_moveit_pose(pick_approach)),
+                ("lift to transit", lambda: self._send_moveit_pose(transit_over_source)),
+                ("transit over slot", lambda: self._send_moveit_pose(transit_over_slot)),
                 ("approach slot", lambda: self._send_moveit_pose(slot_approach)),
-                ("descend to slot", lambda: self._send_moveit_pose(slot_place)),
+                ("descend to release", lambda: self._send_moveit_pose(slot_release)),
             ]
         )
         if bool(self.get_parameter("moveit_use_gripper_controllers").value):

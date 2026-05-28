@@ -82,6 +82,7 @@ class LangChainReasoningNode(Node):
         declare_common_parameters(self)
         self.declare_parameter("llm_provider", "mock")
         self.declare_parameter("llm_model", "gpt-4o-mini")
+        self.declare_parameter("llm_max_tokens", 1500)
         self.declare_parameter("ollama_base_url", "http://localhost:11434")
         self.declare_parameter("huggingface_endpoint_url", "")
         self.declare_parameter("openrouter_base_url", "https://openrouter.ai/api/v1")
@@ -101,10 +102,12 @@ class LangChainReasoningNode(Node):
         self.declare_parameter("arrangement_defaults.tower_x", 0.55)
         self.declare_parameter("arrangement_defaults.tower_y", 0.52)
         self.declare_parameter("arrangement_grasp_orientation", [0.707, 0.707, 0.0, 0.0])
+        self.declare_parameter("conversation_history_turns", 6)
 
         self.workspace_limits = get_workspace_limits(self)
         self.tool0_workspace_limits = get_tool0_workspace_limits(self)
         self.slots = get_slots(self)
+        self._conversation_history: list[tuple[str, str]] = []
         self.cb_group = ReentrantCallbackGroup()
         self.detected_objects_client = self.create_client(
             GetDetectedObjects,
@@ -405,19 +408,42 @@ class LangChainReasoningNode(Node):
                 ),
             ),
         ]
-        prompt = f"{SYSTEM_PROMPT}\n\nUser instruction: {instruction}"
+        history_block = self._format_conversation_history()
+        prompt = f"{SYSTEM_PROMPT}\n\n{history_block}User instruction: {instruction}"
         agent = initialize_agent(tools, llm, agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION, verbose=False)
         output = agent.run(prompt)
+        self._record_conversation_turn(instruction, str(output))
         return {"success": True, "status": str(output), "tool_trace": [{"provider": provider, "agent_output": str(output)}]}
+
+    def _format_conversation_history(self) -> str:
+        max_turns = int(self.get_parameter("conversation_history_turns").value)
+        if max_turns <= 0 or not self._conversation_history:
+            return ""
+        lines = [
+            "Previous conversation (most recent last). Use it to resolve references "
+            "like 'it', 'that one', 'there', 'yes' against earlier turns:"
+        ]
+        for user_msg, assistant_msg in self._conversation_history[-max_turns:]:
+            assistant_short = assistant_msg if len(assistant_msg) <= 600 else assistant_msg[:600] + "…"
+            lines.append(f"User: {user_msg}")
+            lines.append(f"Assistant: {assistant_short}")
+        return "\n".join(lines) + "\n\n"
+
+    def _record_conversation_turn(self, instruction: str, output: str) -> None:
+        self._conversation_history.append((instruction, output))
+        max_turns = int(self.get_parameter("conversation_history_turns").value)
+        if max_turns > 0 and len(self._conversation_history) > max_turns:
+            self._conversation_history = self._conversation_history[-max_turns:]
 
     def _build_llm(self, provider: str) -> Any:
         model = str(self.get_parameter("llm_model").value)
+        max_tokens = int(self.get_parameter("llm_max_tokens").value)
         if provider == "openai":
             if not os.environ.get("OPENAI_API_KEY"):
                 raise ValidationError("OPENAI_API_KEY is not set.")
             from langchain_openai import ChatOpenAI
 
-            return ChatOpenAI(model=model, temperature=0)
+            return ChatOpenAI(model=model, temperature=0, max_tokens=max_tokens)
         if provider == "openrouter":
             api_key = os.environ.get("OPENROUTER_API_KEY")
             if not api_key:
@@ -436,6 +462,7 @@ class LangChainReasoningNode(Node):
             return ChatOpenAI(
                 model=model,
                 temperature=0,
+                max_tokens=max_tokens,
                 api_key=api_key,
                 base_url=str(self.get_parameter("openrouter_base_url").value),
                 default_headers=headers or None,
