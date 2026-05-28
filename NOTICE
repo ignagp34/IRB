@@ -1,0 +1,19 @@
+ABB IRB-120 Cognitive Robot Cell
+Copyright 2026 Ignacio González Périz
+
+This product includes software originally developed by the
+IFRA (Intelligent Flexible Robotics and Assembly) Group at
+Cranfield University, United Kingdom.
+  Original repository: https://github.com/IFRA-Cranfield/irb120_PoseEstimation
+  Original authors:    Mikel Bueno Viso, Irene Bernardino Sanchez,
+                       Seemal Asif, Phil Webb
+  Contact:             IFRA@cranfield.ac.uk
+
+The original work is licensed under the Apache License, Version 2.0.
+
+Modifications and additions in this repository — including the
+cognitive reasoning layer (irb120pe_cognitive), the custom message
+and service definitions (irb120pe_cognitive_interfaces), the LangChain
+integration, the arrangement planner, and the e2e validation harness —
+were authored as part of the RI_26 master's final project and are
+distributed under the same Apache-2.0 License.

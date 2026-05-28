@@ -64,6 +64,17 @@
 </div>
 
 <br />
+
+> **Note on this repository.** This is a derivative work of
+> [IFRA-Cranfield/irb120_PoseEstimation](https://github.com/IFRA-Cranfield/irb120_PoseEstimation)
+> (Apache-2.0). It extends the original ROS 2 packages with a cognitive
+> reasoning layer (`irb120pe_cognitive` and `irb120pe_cognitive_interfaces`)
+> built on LangChain, developed as the RI_26 master's final project by
+> Ignacio González Périz. Modifications and additions are distributed under
+> the same Apache-2.0 License — see [`LICENSE`](./LICENSE) and
+> [`NOTICE`](./NOTICE). Attribution to the original IFRA-Cranfield authors
+> is retained throughout.
+
 <br />
 
 <!-- TABLE OF CONTENTS -->
