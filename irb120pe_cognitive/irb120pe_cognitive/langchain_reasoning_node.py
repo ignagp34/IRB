@@ -83,6 +83,7 @@ class LangChainReasoningNode(Node):
         self.declare_parameter("llm_provider", "mock")
         self.declare_parameter("llm_model", "gpt-4o-mini")
         self.declare_parameter("llm_max_tokens", 1500)
+        self.declare_parameter("llm_max_iterations", 8)
         self.declare_parameter("ollama_base_url", "http://localhost:11434")
         self.declare_parameter("huggingface_endpoint_url", "")
         self.declare_parameter("openrouter_base_url", "https://openrouter.ai/api/v1")
@@ -410,7 +411,15 @@ class LangChainReasoningNode(Node):
         ]
         history_block = self._format_conversation_history()
         prompt = f"{SYSTEM_PROMPT}\n\n{history_block}User instruction: {instruction}"
-        agent = initialize_agent(tools, llm, agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION, verbose=False)
+        agent = initialize_agent(
+            tools,
+            llm,
+            agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+            verbose=False,
+            max_iterations=int(self.get_parameter("llm_max_iterations").value),
+            early_stopping_method="force",
+            handle_parsing_errors=True,
+        )
         output = agent.run(prompt)
         self._record_conversation_turn(instruction, str(output))
         return {"success": True, "status": str(output), "tool_trace": [{"provider": provider, "agent_output": str(output)}]}

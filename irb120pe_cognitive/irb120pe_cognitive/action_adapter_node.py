@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import math
 import threading
+import time
 from typing import Any, Sequence
 
 import rclpy
 from control_msgs.action import GripperCommand
+from gazebo_msgs.srv import GetEntityState
 from geometry_msgs.msg import PoseStamped
 from moveit_msgs.action import MoveGroup
 from moveit_msgs.msg import CollisionObject, Constraints, OrientationConstraint, PositionConstraint
@@ -142,6 +144,11 @@ class ActionAdapterNode(Node):
         self.declare_parameter("place_approach_offset_z", 0.031)
         self.declare_parameter("moveit_transit_z", 1.30)
         self.declare_parameter("place_release_clearance", 0.02)
+        # Closed-loop check: after placing, read the cube's TRUE pose from Gazebo
+        # (/gazebo/get_entity_state) and confirm it landed within tolerance.
+        self.declare_parameter("verify_placement", True)
+        self.declare_parameter("verify_position_tolerance", 0.05)
+        self.declare_parameter("verify_settle_sec", 0.8)
         self.declare_parameter("execution_backend", "legacy")
         self.declare_parameter("moveit_group_name", "irb120_arm")
         self.declare_parameter("moveit_end_effector_link", "tool0")
@@ -192,6 +199,9 @@ class ActionAdapterNode(Node):
             GetDetectedObjects,
             self.get_parameter("detected_objects_service").value,
             callback_group=self.cb_group,
+        )
+        self.entity_state_client = self.create_client(
+            GetEntityState, "/gazebo/get_entity_state", callback_group=self.cb_group
         )
 
         self.create_service(MoveArm, self.get_parameter("move_arm_service").value, self._move_arm_cb, callback_group=self.cb_group)
@@ -316,12 +326,66 @@ class ActionAdapterNode(Node):
                 pick_z=pick_z_validated,
                 pick_approach_z=pick_approach_z_validated,
             )
+            if ok:
+                ok, status = self._verify_placement(
+                    source_model,
+                    target_object_pose_values[0],
+                    target_object_pose_values[1],
+                    target_object_pose_values[2],
+                    status,
+                )
             response.success = ok
             response.status = status
         except Exception as exc:
             response.success = False
             response.status = str(exc)
         return response
+
+    def _verify_placement(
+        self,
+        model: str | None,
+        target_x: float,
+        target_y: float,
+        target_z: float,
+        status: str,
+    ) -> tuple[bool, str]:
+        """Closed-loop check: read the cube's true Gazebo pose and confirm it landed
+        on target. Best-effort and non-fatal: if it cannot read the pose it leaves the
+        motion result untouched. Gated by the ``verify_placement`` parameter."""
+        if not bool(self.get_parameter("verify_placement").value):
+            return True, status
+        if self.execution_backend != "moveit_sim" or not model:
+            return True, status
+        settle = float(self.get_parameter("verify_settle_sec").value)
+        if settle > 0:
+            time.sleep(settle)
+        position = self._gazebo_entity_position(model)
+        if position is None:
+            return True, status + " (sin verificar: /gazebo/get_entity_state no disponible)."
+        dx, dy, dz = position[0] - target_x, position[1] - target_y, position[2] - target_z
+        distance = math.sqrt(dx * dx + dy * dy + dz * dz)
+        tolerance = float(self.get_parameter("verify_position_tolerance").value)
+        if distance <= tolerance:
+            return True, status + f" Verified: cube at target (off by {distance * 100:.1f} cm)."
+        return False, status + (
+            f" Verification FAILED: cube ended {distance * 100:.1f} cm from target "
+            f"(tolerance {tolerance * 100:.0f} cm)."
+        )
+
+    def _gazebo_entity_position(self, name: str) -> tuple[float, float, float] | None:
+        if not self.entity_state_client.wait_for_service(timeout_sec=1.0):
+            return None
+        request = GetEntityState.Request()
+        request.name = name
+        request.reference_frame = "world"
+        future = self.entity_state_client.call_async(request)
+        if not self._wait_for_future(future, 3.0):
+            return None
+        result = future.result()
+        if result is None or not getattr(result, "success", False):
+            return None
+        position = result.state.pose.position
+        return position.x, position.y, position.z
 
     def _lookup_source_pose(self, object_id: str) -> PoseStamped:
         if not object_id:

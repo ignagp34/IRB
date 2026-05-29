@@ -30,13 +30,19 @@
     pick_z_offset_from_object: 0.17
     pick_approach_offset_from_object: 0.20
     # Arrangement and slot targets are object poses; convert them to tool0 goals.
-    place_z_offset_from_object: 0.18
+    place_z_offset_from_object: 0.17
     place_approach_offset_z: 0.10
     # Altura (tool0) a la que se transporta el cubo en horizontal para librar a los vecinos.
-    moveit_transit_z: 1.30
+    moveit_transit_z: 1.20
     # Holgura (m) sobre el destino al soltar: el cubo cae y se asienta en vez de
     # empotrarse en lo que tenga debajo (clave al apilar). Subir si al apilar rebota.
     place_release_clearance: 0.005
+    # Verificacion de lazo cerrado: tras colocar, lee la pose REAL del cubo en Gazebo
+    # (/gazebo/get_entity_state) y confirma que llego al destino. Resuelve la oclusion
+    # al apilar (ve el cubo aunque este tapado). Apagar con verify_placement: false.
+    verify_placement: true
+    verify_position_tolerance: 0.05
+    verify_settle_sec: 0.8
 
     moveit_group_name: irb120_arm
     moveit_end_effector_link: tool0
@@ -64,6 +70,8 @@
     # Tope de tokens de salida por respuesta. Evita que OpenRouter reserve el maximo
     # del modelo (p.ej. 64000) y rechace por saldo insuficiente (error 402).
     llm_max_tokens: 1500
+    # Tope de pasos del agente (tool-calls) para garantizar que SIEMPRE termina.
+    llm_max_iterations: 8
     ollama_base_url: http://localhost:11434
     huggingface_endpoint_url: ""
     openrouter_base_url: "https://openrouter.ai/api/v1"
