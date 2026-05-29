@@ -20,6 +20,7 @@ setup(
                 "launch/reasoning.launch.py",
             ],
         ),
+        (f"share/{package_name}/scripts", ["scripts/spawn_cubos.sh"]),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
